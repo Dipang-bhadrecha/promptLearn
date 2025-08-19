@@ -1,8 +1,6 @@
 
-import React from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Sidebar from "./components/Sidebar";
-import "./styles/sidebar.css";
+import Sidebar from "./component/Sidebar/Sidebar";
+import "./styles/sidebar.css"; // Assuming you have a CSS file for styling
 
 export default function App() {
   return (

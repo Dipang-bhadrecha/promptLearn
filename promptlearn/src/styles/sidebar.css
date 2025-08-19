@@ -45,6 +45,10 @@ body, #root, .app-root {
   border-bottom: 1px solid var(--divider);
 }
 
+.sidebar-header .spacer {
+  flex: 1 1 auto;
+}
+
 .collapse-btn {
   background: transparent;
   color: var(--sidebar-text);
