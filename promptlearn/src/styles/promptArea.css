@@ -1,11 +1,173 @@
 .prompt-container {
   flex: 1;
-  width: calc(100% - 260px); 
+  width: calc(100% - 260px);
   height: 100vh;
   background-color: #2f3136;
-  position: relative;
+  position: fixed;
   right: 0;
   top: 0;
+  overflow: hidden;
+  transition: width 0.3s ease, left 0.3s ease;
+}
+
+.prompt-container.sidebar-closed {
+  width: 100%;
+  left: 0;
+}
+
+.toggle-sidebar-btn {
+  position: absolute;
+  left: 10px;
+  top: 10px;
+  z-index: 1000;
+  background: #40444b;
+  border: none;
+  color: white;
+  width: 30px;
+  height: 30px;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+}
+
+.toggle-sidebar-btn:hover {
+  background: #4752c4;
+}
+
+.mindmap-area {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transition: transform 0.1s ease;
+  user-select: none;
+  cursor: crosshair; /* Default cursor for selection */
+}
+
+.mindmap-area.dragging {
+  cursor: grabbing;
+}
+
+.mindmap-area.panning {
+  cursor: grabbing; /* Show grabbing cursor when panning with right click */
+}
+
+.connections-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Update the connection line styles */
+.connections-layer line {
+  stroke: #666;
+  stroke-width: 2;
+  stroke-dasharray: none; /* Remove the dashed style */
+}
+
+/* Add new styles for arrow markers */
+.connections-layer svg {
+  overflow: visible; /* Allow markers to be visible outside SVG bounds */
+}
+
+.arrow-marker {
+  fill: #666;
+}
+
+.node {
+  position: absolute;
+  background: #40444b;
+  border-radius: 4px;
+  padding: 16px;
+  width: 150px;
+  height: 50px;
+  cursor: default;  /* Changed from pointer to default */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: all 0.2s ease;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  margin: 10px 0;  /* Consistent vertical spacing */
+  min-height: 50px;
+}
+
+.node:hover {
+  outline: 2px solid rgba(88, 101, 242, 0.5);
+  cursor: move;  /* Show move cursor on hover */
+}
+
+.node.dragging {
+  opacity: 0.8;
+  cursor: grabbing;
+}
+
+.node.connected {
+  outline: 2px dashed rgba(88, 101, 242, 0.5);
+}
+
+.node:hover::after {
+  /* content: 'Double-click to edit'; */
+  position: absolute;
+  bottom: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 12px;
+  color: #666;
+  white-space: nowrap;
+  opacity: 0.8;
+}
+
+.node-content {
+  color: #ffffff;
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.add-node-btn {
+  position: absolute;
+  right: -20px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 24px;
+  height: 24px;
+  border-radius: 12px;
+  background: #5865f2;
+  color: white;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.node:hover .add-node-btn {
+  opacity: 1;
+}
+
+.add-node-btn:hover {
+  background: #4752c4;
+}
+
+.add-node-btn.add-right {
+  right: -20px;
+  top: 50%;
+  z-index: 3; /* Ensure button stays above connections */
+}
+
+.add-node-btn.add-left {
+  left: -20px;
+  top: 50%;
 }
 
 .chat-area {
@@ -77,4 +239,149 @@
 .submit-button:disabled {
   background-color: #3c3f45;
   cursor: not-allowed;
+}
+
+.delete-node-btn {
+  position: absolute;
+  right: -20px;
+  top: 0;
+  width: 24px;
+  height: 24px;
+  border-radius: 12px;
+  background: #ed4245;
+  color: white;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.node:hover .delete-node-btn {
+  opacity: 1;
+}
+
+.delete-node-btn:hover {
+  background: #c93437;
+}
+
+.zoom-controls {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: rgba(64, 68, 75, 0.9); /* Make slightly transparent */
+  padding: 8px;
+  border-radius: 8px;
+  display: flex;
+  gap: 8px;
+  z-index: 1000;
+}
+
+.zoom-controls button {
+  background: #5865f2;
+  border: none;
+  color: white;
+  width: 30px;
+  height: 30px;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.zoom-controls button:hover {
+  background: #4752c4;
+}
+
+.zoom-controls span {
+  color: white;
+  display: flex;
+  align-items: center;
+  padding: 0 8px;
+  min-width: 60px; /* Ensure consistent width for percentage */
+  justify-content: center;
+}
+
+.node.main-topic {
+  background: #5865f2;
+  border: 2px solid #4752c4;
+  margin-right: 60px;  /* Space for connections */
+}
+
+.node.main-topic .node-content {
+  font-weight: 600;
+  font-size: 16px;
+}
+
+/* Selection styles */
+.selector {
+  position: absolute;
+  border: 2px dashed #5865f2;
+  background: rgba(88, 101, 242, 0.1);
+  pointer-events: none;
+  z-index: 1000;
+}
+
+.node.selected {
+  border: 2px solid #5865f2;
+  background: rgba(88, 101, 242, 0.2);
+  box-shadow: 0 0 10px rgba(88, 101, 242, 0.3);
+}
+
+.node.selected:hover {
+  cursor: move;
+}
+
+/* Add corner handles for the selector */
+.selector-handle {
+  width: 8px;
+  height: 8px;
+  background: #fff;
+  border: 1px solid #5865f2;
+  position: absolute;
+}
+
+.selector-handle.top-left { top: -4px; left: -4px; }
+.selector-handle.top-right { top: -4px; right: -4px; }
+.selector-handle.bottom-left { bottom: -4px; left: -4px; }
+.selector-handle.bottom-right { bottom: -4px; right: -4px; }
+
+/* Add styles for connection points */
+.connection-point {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  right: -24px; /* Position it at the plus button */
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent; /* Make it invisible but keep for reference */
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.node:hover .connection-point {
+  opacity: 1;
+}
+
+.connection-point.right {
+  right: -4px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.connection-point.left {
+  left: -4px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* Update connection styles */
+.connection-path {
+  pointer-events: none;
+  stroke: #666;
+  stroke-width: 2;
 }
