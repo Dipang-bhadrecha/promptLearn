@@ -43,7 +43,7 @@
   position: relative;
   transition: transform 0.1s ease;
   user-select: none;
-  cursor: crosshair; /* Default cursor for selection */
+  cursor: default; /* Changed from crosshair to default */
 }
 
 .mindmap-area.dragging {
@@ -64,39 +64,43 @@
   z-index: 1;
 }
 
-/* Update the connection line styles */
-.connections-layer line {
-  stroke: #666;
-  stroke-width: 2;
-  stroke-dasharray: none; /* Remove the dashed style */
-}
-
-/* Add new styles for arrow markers */
-.connections-layer svg {
-  overflow: visible; /* Allow markers to be visible outside SVG bounds */
-}
-
 .arrow-marker {
   fill: #666;
+}
+
+/* Add styles for connection lines */
+.connections-layer line,
+.connections-layer path {
+  stroke: #666;
+  stroke-width: 1.5;
+  fill: none;
+}
+
+/* Add hover effect for connected nodes */
+.node:hover .connection-path {
+  stroke: #5865f2;
+  stroke-width: 2;
 }
 
 .node {
   position: absolute;
   background: #40444b;
   border-radius: 4px;
-  padding: 16px;
-  width: 150px;
+  padding: 12px;
+  width: 300px; /* Increased width for prompt area */
   height: 50px;
-  cursor: default;  /* Changed from pointer to default */
+  cursor: move; /* Always show move cursor */
+  pointer-events: all; /* Ensure all parts of node are clickable */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   transition: all 0.2s ease;
   z-index: 2;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: space-between;
   user-select: none;
-  margin: 10px 0;  /* Consistent vertical spacing */
-  min-height: 50px;
+  margin: 40px 0;  /* Increase vertical spacing between nodes */
+  min-height: 100px; /* Increased height */
 }
 
 .node:hover {
@@ -107,6 +111,7 @@
 .node.dragging {
   opacity: 0.8;
   cursor: grabbing;
+  z-index: 1001;
 }
 
 .node.connected {
@@ -128,7 +133,108 @@
 .node-content {
   color: #ffffff;
   font-size: 14px;
-  margin-bottom: 8px;
+  margin-bottom: 12px;
+  font-weight: 600;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #40444b;
+}
+
+/* New styles for prompt section */
+.node-prompt-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
+.node-prompt-input {
+  width: 100%;
+  min-height: 36px;
+  padding: 8px 12px;
+  border-radius: 4px;
+  border: 1px solid #40444b;
+  background: #2f3136;
+  color: #dcddde;
+  font-size: 14px;
+  resize: vertical;
+  transition: border-color 0.2s;
+}
+
+.node-prompt-input:focus {
+  outline: none;
+  border-color: #5865f2;
+}
+
+.node-prompt-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.node-send-button {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  background: #5865f2;
+  color: white;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.node-send-button:hover {
+  background: #4752c4;
+}
+
+.node-response {
+  margin-top: 8px;
+  padding: 12px;
+  background: rgba(47, 49, 54, 0.4);
+  border-radius: 4px;
+  font-size: 14px;
+  color: #dcddde;
+  height: auto;
+  overflow: visible; /* Remove scroll */
+}
+
+.node-response pre {
+  margin: 0;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  font-family: inherit;
+  line-height: 1.5;
+}
+
+/* Add custom scrollbar for response section */
+.node-response::-webkit-scrollbar {
+  width: 8px;
+}
+
+.node-response::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+}
+
+.node-response::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+}
+
+/* Adjust connection points for resizable nodes */
+.add-node-btn.add-right {
+  right: -20px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* Ensure content doesn't overflow */
+.node-content {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .add-node-btn {
@@ -307,18 +413,50 @@
 }
 
 .node.main-topic {
-  background: #5865f2;
-  border: 2px solid #4752c4;
-  margin-right: 60px;  /* Space for connections */
+  width: auto;
+  min-width: 300px;
+  max-width: 600px;
+  height: auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
-.node.main-topic .node-content {
-  font-weight: 600;
-  font-size: 16px;
+.node-response {
+  margin-top: 8px;
+  padding: 12px;
+  background: rgba(47, 49, 54, 0.4);
+  border-radius: 4px;
+  font-size: 14px;
+  color: #dcddde;
+  height: auto;
+  overflow: visible; /* Remove scroll */
 }
 
-/* Selection styles */
-.selector {
+.node-response pre {
+  margin: 0;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  font-family: inherit;
+  line-height: 1.5;
+}
+
+.main-topic-content {
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Remove max-height and scrollbar styles if they exist */
+.node-response::-webkit-scrollbar {
+  display: none;
+}
+
+/* Style for selection box */
+.selection-box {
   position: absolute;
   border: 2px dashed #5865f2;
   background: rgba(88, 101, 242, 0.1);
@@ -326,62 +464,37 @@
   z-index: 1000;
 }
 
+/* Style for selected nodes */
 .node.selected {
-  border: 2px solid #5865f2;
-  background: rgba(88, 101, 242, 0.2);
-  box-shadow: 0 0 10px rgba(88, 101, 242, 0.3);
+  outline: 2px solid #5865f2;
+  background-color: rgba(88, 101, 242, 0.1);
 }
 
-.node.selected:hover {
-  cursor: move;
+/* Ensure text remains readable when node is selected */
+.node.selected .node-content,
+.node.selected .node-prompt,
+.node.selected .node-response {
+  color: #dcddde;
 }
 
-/* Add corner handles for the selector */
-.selector-handle {
-  width: 8px;
-  height: 8px;
-  background: #fff;
-  border: 1px solid #5865f2;
-  position: absolute;
+/* Style for dragging state */
+.node.dragging {
+  opacity: 0.8;
+  cursor: grabbing;
+  z-index: 1001;
 }
 
-.selector-handle.top-left { top: -4px; left: -4px; }
-.selector-handle.top-right { top: -4px; right: -4px; }
-.selector-handle.bottom-left { bottom: -4px; left: -4px; }
-.selector-handle.bottom-right { bottom: -4px; right: -4px; }
-
-/* Add styles for connection points */
-.connection-point {
-  position: absolute;
-  width: 8px;
-  height: 8px;
-  right: -24px; /* Position it at the plus button */
-  top: 50%;
-  transform: translateY(-50%);
-  background: transparent; /* Make it invisible but keep for reference */
-  opacity: 0;
-  transition: opacity 0.2s;
+/* Make sure buttons remain clickable */
+.add-node-btn,
+.delete-node-btn {
+  cursor: pointer;
+  pointer-events: all;
 }
 
-.node:hover .connection-point {
-  opacity: 1;
-}
-
-.connection-point.right {
-  right: -4px;
-  top: 50%;
-  transform: translateY(-50%);
-}
-
-.connection-point.left {
-  left: -4px;
-  top: 50%;
-  transform: translateY(-50%);
-}
-
-/* Update connection styles */
-.connection-path {
-  pointer-events: none;
-  stroke: #666;
-  stroke-width: 2;
+/* Prevent text selection during drag */
+.node * {
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
 }

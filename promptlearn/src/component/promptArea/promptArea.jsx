@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import '../../styles/promptArea.css';
 
 const PromptArea = ({ isSidebarOpen, setIsSidebarOpen }) => {
+  // Update the initial nodes state
   const [nodes, setNodes] = useState([
     { 
       id: 1, 
@@ -9,7 +10,46 @@ const PromptArea = ({ isSidebarOpen, setIsSidebarOpen }) => {
       x: 400, 
       y: 300,
       connections: [],
-      isMainTopic: true // Add this flag to identify main topic
+      isMainTopic: true,
+      prompt: 'Explain the core concepts and fundamentals of Object-Oriented Programming (OOP)',
+      response: `Core Concepts
+
+1. Encapsulation:
+   • Definition: Bundling data (attributes) and methods (functions) that operate on the data into a single unit, an object.
+   • Access Specifiers: public, private, protected
+   • Example: Like a car's engine - use it without knowing internal workings 🚗
+
+2. Abstraction:
+   • Definition: Hiding complex implementation details, showing only essential features
+   • Tools: Abstract classes and interfaces
+   • Example: TV remote - simple buttons hide complex circuitry 📺
+
+3. Inheritance:
+   • Definition: New class inherits properties/behaviors from existing class
+   • Types: Single, multiple, multilevel, hierarchical, hybrid
+   • Example: Car class inherits from Vehicle class 🚗➡️🚙
+
+4. Polymorphism:
+   • Definition: Ability of object to take many forms
+   • Types:
+     - Compile-time (Static): Method overloading
+     - Runtime (Dynamic): Method overriding
+   • Example: Play button working for different media types ⏯️
+
+Fundamental Building Blocks:
+• Class: Blueprint for creating objects
+• Object: Instance of a class 🏠
+• Method: Function belonging to class
+• Attribute: Variable holding object's state
+
+Advanced Concepts:
+• Constructor: Initializes object
+• Destructor: Cleanup when object destroyed
+• Association:
+  - Aggregation: "has-a" relationship
+  - Composition: Strong "has-a" relationship
+• Interface: Contract defining required methods
+• Static Members: Class-level variables/methods`
     }
   ]);
   const [scale, setScale] = useState(1);
@@ -26,6 +66,11 @@ const PromptArea = ({ isSidebarOpen, setIsSidebarOpen }) => {
   const svgRef = useRef(null);
   const isDragging = useRef(false);
   const lastPosition = useRef({ x: 0, y: 0 });
+  // Add this state for tracking the board size
+  const [boardSize, setBoardSize] = useState({
+    width: 3000,  // Large initial width
+    height: 3000  // Large initial height
+  });
 
   // Update the handleWheel function
   const handleWheel = (e) => {
@@ -56,38 +101,44 @@ const PromptArea = ({ isSidebarOpen, setIsSidebarOpen }) => {
   const handleMouseDown = (e) => {
     const isNode = e.target.closest('.node');
     
-    // Left click (selection)
+    // Left click for selection and dragging
     if (e.button === 0) {
-      if (!isNode) {
-        setSelecting(true);
-        const rect = containerRef.current.getBoundingClientRect();
-        const x = (e.clientX - rect.left) / scale;
-        const y = (e.clientY - rect.top) / scale;
-        setSelectionStart({ x, y });
-        setSelectionEnd({ x, y });
-      } else {
+      e.preventDefault();
+      if (isNode) {
         // Handle node selection
-        const node = nodes.find(n => n.id === parseInt(isNode.dataset.nodeId));
-        if (!selectedNodes.includes(node.id)) {
-          setSelectedNodes([node.id]);
+        const nodeId = parseInt(isNode.dataset.nodeId);
+        if (!e.shiftKey) {
+          // Clear selection if shift isn't held
+          if (!selectedNodes.includes(nodeId)) {
+            setSelectedNodes([nodeId]);
+          }
+        } else {
+          // Add to selection if shift is held
+          if (!selectedNodes.includes(nodeId)) {
+            setSelectedNodes([...selectedNodes, nodeId]);
+          }
         }
+        
+        // Start dragging
         setIsDraggingNodes(true);
         setDragStart({ x: e.clientX, y: e.clientY });
-        
-        // Find connected nodes
-        const connectedNodes = findConnectedNodes(node.id);
-        setSelectedNodes([node.id, ...connectedNodes]);
-        
-        isNode.classList.add('dragging');
+      } else {
+        // Start selection box
+        setSelecting(true);
+        const rect = containerRef.current.getBoundingClientRect();
+        const x = (e.clientX - rect.left - position.x) / scale;
+        const y = (e.clientY - rect.top - position.y) / scale;
+        setSelectionStart({ x, y });
+        setSelectionEnd({ x, y });
+        setSelectedNodes([]); // Clear selection when starting new selection box
       }
-      e.preventDefault();
     }
     
     // Right click (panning)
     if (e.button === 2) {
       if (!isNode) {
         setIsPanning(true);
-        e.target.classList.add('panning');
+        document.body.style.cursor = 'grabbing';
         startPanPosition.current = {
           x: e.clientX - position.x,
           y: e.clientY - position.y
@@ -149,7 +200,7 @@ const PromptArea = ({ isSidebarOpen, setIsSidebarOpen }) => {
   const handleMouseUp = (e) => {
     if (isPanning) {
       setIsPanning(false);
-      document.querySelector('.mindmap-area').classList.remove('panning');
+      document.body.style.cursor = 'default';
     }
     
     if (isDraggingNodes) {
@@ -237,12 +288,11 @@ const PromptArea = ({ isSidebarOpen, setIsSidebarOpen }) => {
             id="arrowhead"
             markerWidth="10"
             markerHeight="7"
-            refX="9.5" // Adjusted to better align with the target
+            refX="9"
             refY="3.5"
             orient="auto"
-            className="arrow-marker"
           >
-            <polygon points="0 0, 10 3.5, 0 7" />
+            <polygon points="0 0, 10 3.5, 0 7" fill="#666" />
           </marker>
         </defs>
         {nodes.map(node => {
@@ -251,45 +301,41 @@ const PromptArea = ({ isSidebarOpen, setIsSidebarOpen }) => {
               nodes.find(n => n.id === id)
             ).filter(Boolean);
 
-            const startX = node.x + 150; // Right edge of main topic
-            const mainY = node.y + 25;   // Center of main topic
-            const verticalLineX = startX + 40; // Adjusted vertical line position
-
-            // Sort connected nodes by vertical position
-            const sortedNodes = [...connectedNodes].sort((a, b) => a.y - b.y);
-            const minY = sortedNodes[0].y + 25;
-            const maxY = sortedNodes[sortedNodes.length - 1].y + 25;
+            // Calculate positions
+            const startX = node.x + 150;        // Right edge of main topic
+            const verticalLineX = startX + 40;  // Vertical line position
+            const mainCenterY = node.y + 25;    // Center of main topic
 
             return (
               <g key={`connections-${node.id}`}>
-                {/* Main horizontal line */}
+                {/* Main horizontal line from topic */}
                 <path
-                  d={`M ${startX} ${mainY} L ${verticalLineX} ${mainY}`}
-                  className="connection-path"
+                  d={`M ${startX} ${mainCenterY} H ${verticalLineX}`}
                   stroke="#666"
-                  strokeWidth="2"
-                  fill="none"
-                />
-                
-                {/* Vertical line */}
-                <path
-                  d={`M ${verticalLineX} ${minY} L ${verticalLineX} ${maxY}`}
-                  className="connection-path"
-                  stroke="#666"
-                  strokeWidth="2"
+                  strokeWidth="1.5"
                   fill="none"
                 />
 
+                {/* Vertical connection line */}
+                {connectedNodes.length > 0 && (
+                  <path
+                    d={`M ${verticalLineX} ${Math.min(...connectedNodes.map(n => n.y + 25))} 
+                       V ${Math.max(...connectedNodes.map(n => n.y + 25))}`}
+                    stroke="#666"
+                    strokeWidth="1.5"
+                    fill="none"
+                  />
+                )}
+
                 {/* Individual node connections */}
-                {sortedNodes.map(targetNode => {
-                  const targetY = targetNode.y + 25;
+                {connectedNodes.map(targetNode => {
+                  const targetY = targetNode.y + 25; // Center of target node
                   return (
                     <path
                       key={`connection-${node.id}-${targetNode.id}`}
-                      d={`M ${verticalLineX} ${targetY} L ${targetNode.x} ${targetY}`}
-                      className="connection-path"
+                      d={`M ${verticalLineX} ${targetY} H ${targetNode.x}`}
                       stroke="#666"
-                      strokeWidth="2"
+                      strokeWidth="1.5"
                       fill="none"
                       markerEnd="url(#arrowhead)"
                     />
@@ -398,6 +444,112 @@ const PromptArea = ({ isSidebarOpen, setIsSidebarOpen }) => {
     e.preventDefault();
   };
 
+  const Node = ({ node, onUpdate }) => {
+    // Add these states for prompt management
+    const [prompt, setPrompt] = useState('');
+    const [showPromptInput, setShowPromptInput] = useState(false);
+
+    const handlePromptSubmit = async () => {
+      if (!prompt.trim()) return;
+      
+      try {
+        // Example response - replace with actual API call
+        const response = "This is a sample response to your prompt...";
+        
+        onUpdate(node.id, {
+          ...node,
+          prompt: prompt,
+          response: response
+        });
+        
+        setPrompt('');
+        setShowPromptInput(false);
+      } catch (error) {
+        console.error('Error processing prompt:', error);
+      }
+    };
+
+    return (
+      <div className={`node ${node.isMainTopic ? 'main-topic' : ''}`}
+           style={{ left: node.x, top: node.y }}>
+        {node.isMainTopic ? (
+          <div className="main-topic-content">
+            <div className="main-topic-title">{node.text}</div>
+            
+            {showPromptInput ? (
+              <div className="node-prompt-section">
+                <textarea
+                  className="node-prompt-input"
+                  value={prompt}
+                  onChange={(e) => setPrompt(e.target.value)}
+                  placeholder="Enter your prompt..."
+                  rows={2}
+                />
+                <div className="node-prompt-actions">
+                  <button 
+                    className="node-send-button"
+                    onClick={handlePromptSubmit}
+                  >
+                    Send
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <button 
+                className="node-send-button"
+                onClick={() => setShowPromptInput(true)}
+              >
+                Add Prompt
+              </button>
+            )}
+            
+            {node.prompt && (
+              <div className="main-topic-prompt">
+                <strong>Prompt:</strong> {node.prompt}
+              </div>
+            )}
+            
+            {node.response && (
+              <div className="main-topic-response">
+                <strong>Response:</strong> {node.response}
+              </div>
+            )}
+          </div>
+        ) : (
+          <div className="node-content">{node.text}</div>
+        )}
+
+        {/* Existing buttons */}
+        <button className="add-node-btn add-right">+</button>
+        {!node.isMainTopic && (
+          <button className="delete-node-btn">×</button>
+        )}
+      </div>
+    );
+  };
+
+  const renderNodeContent = (node) => {
+    if (node.isMainTopic) {
+      return (
+        <div className="main-topic-content">
+          <div className="main-topic-title">{node.text}</div>
+          {node.prompt && (
+            <div className="node-prompt">
+              <strong>Prompt:</strong> {node.prompt}
+            </div>
+          )}
+          {node.response && (
+            <div className="node-response">
+              <strong>Response:</strong>
+              <pre>{node.response}</pre>
+            </div>
+          )}
+        </div>
+      );
+    }
+    return <div className="node-content">{node.text}</div>;
+  };
+
   return (
     <div 
       ref={containerRef}
@@ -420,7 +572,9 @@ const PromptArea = ({ isSidebarOpen, setIsSidebarOpen }) => {
         onMouseLeave={handleMouseUp}
         style={{
           transform: `scale(${scale}) translate(${position.x}px, ${position.y}px)`,
-          transformOrigin: '0 0'
+          transformOrigin: '0 0',
+          width: boardSize.width,
+          height: boardSize.height
         }}
       >
         {renderConnections()}
@@ -435,15 +589,7 @@ const PromptArea = ({ isSidebarOpen, setIsSidebarOpen }) => {
             onDoubleClick={(e) => handleNodeDoubleClick(e, node)}
             onDragStart={(e) => e.preventDefault()}
           >
-            {!node.isMainTopic && (
-              <button 
-                className="delete-node-btn"
-                onClick={(e) => handleDeleteNode(e, node.id)}
-              >
-                ×
-              </button>
-            )}
-            <div className="node-content">{node.text}</div>
+            {renderNodeContent(node)}
             <button 
               className="add-node-btn add-right"
               onClick={(e) => {
@@ -453,15 +599,12 @@ const PromptArea = ({ isSidebarOpen, setIsSidebarOpen }) => {
             >
               +
             </button>
-            {node.isMainTopic && (
+            {!node.isMainTopic && (
               <button 
-                className="add-node-btn add-left"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleAddNode(node.id, 'left');
-                }}
+                className="delete-node-btn"
+                onClick={(e) => handleDeleteNode(e, node.id)}
               >
-                +
+                ×
               </button>
             )}
           </div>
