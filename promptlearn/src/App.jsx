@@ -1,11 +1,14 @@
 
+import PromptArea from "./component/promptArea/promptArea";
+import "./styles/promptArea.css";
 import Sidebar from "./component/Sidebar/Sidebar";
-import "./styles/sidebar.css"; // Assuming you have a CSS file for styling
+import "./styles/sidebar.css"; 
 
 export default function App() {
   return (
     <div className="app-root">
       <Sidebar />
+      <PromptArea />
     </div>
   );
 }

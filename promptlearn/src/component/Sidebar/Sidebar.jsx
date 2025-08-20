@@ -60,7 +60,7 @@ export default function Sidebar() {
         {!collapsed && (
           <div className="brand">
             <div className="brand-logo">🤖</div>
-            <div className="brand-name">ChatApp</div>
+            <div className="brand-name">promptLearn</div>
           </div>
         )}
       </div>
