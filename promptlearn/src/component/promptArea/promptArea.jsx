@@ -42,7 +42,7 @@ Fundamental Building Blocks:
 • Method: Function belonging to class
 • Attribute: Variable holding object's state
 
-Advanced Concepts:
+Advanced Concept:
 • Constructor: Initializes object
 • Destructor: Cleanup when object destroyed
 • Association:
