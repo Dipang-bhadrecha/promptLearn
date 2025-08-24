@@ -1,0 +1,143 @@
+.cb-root {
+	position: fixed;
+	inset: 0;
+	background: #343541;
+	color: #ececf1;
+	overflow: hidden;
+}
+
+/* non-deletable main prompt bar */
+.cb-mainbar {
+	position: absolute;
+	left: 50%;
+	bottom: 16px;
+	transform: translateX(-50%);
+	z-index: 20;
+}
+
+.cb-mainbar-inner {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	background: #40414f;
+	border: 1px solid #565869;
+	border-radius: 999px;
+	padding: 10px 14px;
+	min-width: 560px;
+}
+
+.cb-plus {
+	width: 32px;
+	height: 32px;
+	border-radius: 50%;
+	border: 1px solid #565869;
+	background: #2f3136;
+	color: #ececf1;
+	cursor: pointer;
+}
+
+.cb-input {
+	flex: 1;
+	background: transparent;
+	border: none;
+	color: #ececf1;
+	font-size: 16px;
+	outline: none;
+}
+
+.cb-actions { display: flex; gap: 8px; }
+.cb-voice, .cb-send {
+	width: 34px;
+	height: 34px;
+	border-radius: 50%;
+	border: 1px solid #565869;
+	background: #2f3136;
+	color: #ececf1;
+	cursor: pointer;
+}
+
+/* removed messages column; using floating cards */
+
+/* grey board */
+.cb-board {
+	position: absolute;
+	inset: 0;
+	transform-origin: 0 0;
+	background: #343541;
+	cursor: default;
+	z-index: 1;
+}
+.cb-board.panning { cursor: grabbing; }
+
+/* draggable prompt cards */
+.cb-card {
+	position: absolute;
+	min-width: 260px;
+	background: #2f3136;
+	border: 1px solid #3b3e45;
+	border-radius: 12px;
+	box-shadow: 0 6px 22px rgba(0,0,0,0.32);
+	overflow: hidden;
+}
+
+.cb-card.selected { outline: 2px solid #5865f2; }
+
+.cb-card-header {
+	padding: 10px 12px;
+	background: #3a3d44;
+	border-bottom: 1px solid #3b3e45;
+	color: #cfd2da;
+	font-size: 12px;
+	cursor: grab;
+	user-select: none;
+	transition: background 0.2s;
+}
+.cb-card-header:hover { background: #4a4d54; }
+.cb-card-header:active { cursor: grabbing; background: #5a5d64; }
+
+.cb-card-section { padding: 10px 12px; display: flex; flex-direction: column; gap: 8px; }
+.cb-card-section.prompt { background: #2f3136; }
+.cb-card-section.response { background: #2a2c33; border-top: 1px solid #3b3e45; }
+
+.cb-card-label { font-size: 11px; color: #9aa0a6; text-transform: uppercase; letter-spacing: .06em; }
+
+.cb-card-textarea {
+	width: 100%;
+	min-height: 60px;
+	resize: vertical;
+	background: #1e1f24;
+	border: 1px solid #3b3e45;
+	border-radius: 8px;
+	color: #ececf1;
+	outline: none;
+	padding: 8px 10px;
+	font-size: 13px;
+}
+
+.cb-card-response { white-space: pre-wrap; color: #ececf1; font-size: 13px; }
+
+/* zoom */
+.cb-zoom {
+	position: absolute;
+	right: 16px;
+	bottom: 16px;
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	background: rgba(31,32,36,0.8);
+	border: 1px solid #3b3e45;
+	border-radius: 10px;
+	padding: 8px 10px;
+	z-index: 20;
+}
+.cb-zoom button {
+	width: 32px;
+	height: 32px;
+	border-radius: 8px;
+	border: 1px solid #565869;
+	background: #2f3136;
+	color: #ececf1;
+	cursor: pointer;
+}
+
+
