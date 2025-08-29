@@ -1,53 +1,46 @@
-# PromptLearn
+# Getting Started with Create React App
 
-A visual AI prompt engineering and mind mapping tool built with React.
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-![PromptLearn Demo](demo.gif)
+## Available Scripts
 
-## 🚀 Features
+In the project directory, you can run:
 
-### 🎯 Visual Mind Mapping
-- Create and connect multiple prompt nodes
-- Professional arrow connections
-- Drag-and-drop node positioning
-- Multi-node selection
-- Intuitive node hierarchy
+### `npm start`
 
-### 💡 Prompt Engineering
-- Integrated prompt workspace in each node
-- Real-time AI responses
-- Conversation history tracking
-- Prompt templates (coming soon)
+Runs the app in the development mode.\
+Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-### 🎨 Modern UI/UX
-- Discord-inspired dark theme
-- Smooth animations
-- Collapsible sidebar
-- Responsive design
+The page will reload if you make edits.\
+You will also see any lint errors in the console.
 
-### 🖱️ Interactive Controls
-- Mouse wheel zoom in/out
-- Right-click drag for board panning
-- Left-click drag for node selection
-- Double-click node editing
+### `npm test`
 
-## 💻 Usage
+Launches the test runner in the interactive watch mode.\
+See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-### Basic Controls
-- **Zoom**: Mouse wheel
-- **Pan**: Right-click drag
-- **Select**: Left-click drag
-- **Edit Node**: Double-click
-- **Add Node**: Click + button
-- **Delete Node**: Click × button
+### `npm run build`
 
-### Prompt Engineering
-1. Select or create a node
-2. Enter your prompt in the text area
-3. Click Send to get AI response
-4. Responses are saved in the node
----
+Builds the app for production to the `build` folder.\
+It correctly bundles React in production mode and optimizes the build for the best performance.
 
-**Note:** This is a prototype version focusing on core mind mapping functionality. AI integration and advanced features are in development.
+The build is minified and the filenames include the hashes.\
+Your app is ready to be deployed!
 
-Live Demo | Documentation | Report Bug
+See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+
+### `npm run eject`
+
+**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+
+If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+
+Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+
+You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+
+## Learn More
+
+You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+
+To learn React, check out the [React documentation](https://reactjs.org/).
