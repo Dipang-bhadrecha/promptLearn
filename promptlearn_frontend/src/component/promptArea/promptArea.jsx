@@ -190,17 +190,30 @@ const PromptArea = ({ isSidebarOpen, setIsSidebarOpen }) => {
     const handlePromptSubmit = async () => {
       try {
         setNodes(prev => prev.map(n => n.id === node.id ? { ...n, prompt } : n));
-        const res = await fetch("http://localhost:3000/api/chat", {
+
+        // 🔗 Call your backend API
+        const res = await fetch("http://localhost:5000/api/chat", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ prompt }),
         });
+
         const data = await res.json();
         if (data.error) throw new Error(data.error);
-        setNodes(prev => prev.map(n => n.id === node.id ? { ...n, response: data.reply } : n));
+
+        // Save backend response into this node
+        setNodes(prev =>
+          prev.map(n => n.id === node.id ? { ...n, response: data.reply } : n)
+        );
       } catch (err) {
         console.error("Error:", err.message);
-        setNodes(prev => prev.map(n => n.id === node.id ? { ...n, response: "⚠️ Failed to fetch AI response" } : n));
+        setNodes(prev =>
+          prev.map(n =>
+            n.id === node.id
+              ? { ...n, response: "⚠️ Failed to fetch AI response" }
+              : n
+          )
+        );
       }
     };
 
@@ -280,7 +293,11 @@ const PromptArea = ({ isSidebarOpen, setIsSidebarOpen }) => {
 
   // === MAIN RETURN ===
   return (
-    <div ref={containerRef} className={`prompt-container ${!isSidebarOpen ? 'sidebar-closed' : ''}`} onContextMenu={handleContextMenu}>
+    <div
+      ref={containerRef}
+      className={`prompt-container ${!isSidebarOpen ? 'sidebar-closed' : ''}`}
+      onContextMenu={handleContextMenu}
+    >
       <button className="toggle-sidebar-btn" onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
         {isSidebarOpen ? '◀' : '▶'}
       </button>
