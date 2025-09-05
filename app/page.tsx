@@ -1,15 +1,21 @@
-// app/page.tsx
-import React from "react";
+"use client";
+
+import { SidebarProvider } from "../components/ui/sidebar";
+import dynamic from "next/dynamic";
+import { Suspense } from "react";
 import { AppSidebar } from "../components/app.sidebar";
 
-export default function HomePage() {
+// const Workflow = dynamic(() => import("../components/workflow"), { ssr: false });
+
+export default function Home() {
   return (
-    <div className="flex">
+    <SidebarProvider>
       <AppSidebar />
-      <main className="flex-1 p-8">
-        <h1 className="text-2xl font-bold">Welcome to My App</h1>
-        <p>Here is your main content.</p>
+      <main className="w-full h-svh relative">
+        {/* <Suspense fallback={null}>
+          <Workflow />
+        </Suspense> */}
       </main>
-    </div>
+    </SidebarProvider>
   );
 }
