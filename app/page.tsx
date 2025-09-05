@@ -1,8 +1,8 @@
 "use client";
 
 import { SidebarProvider } from "../components/ui/sidebar";
-import dynamic from "next/dynamic";
-import { Suspense } from "react";
+// import dynamic from "next/dynamic";
+// import { Suspense } from "react";
 import { AppSidebar } from "../components/app.sidebar";
 
 // const Workflow = dynamic(() => import("../components/workflow"), { ssr: false });
