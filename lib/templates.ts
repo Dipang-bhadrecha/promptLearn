@@ -2,6 +2,8 @@ import { nanoid } from "nanoid";
 import { Workflow, getCleanedWorkflow } from "./workflow-store";
 
 export const templates: Workflow[] = [
+
+  // Welcome message
   {
     id: "4LdefduJLREJuZYhz_k2g",
     name: "Welcome 👋",
@@ -165,6 +167,8 @@ export const templates: Workflow[] = [
     updatedAt: "2025-07-03T12:01:34.614Z",
     createdAt: "2025-07-03T11:56:36.973Z",
   },
+
+  // Simple proofread
   {
     id: "So_ExWhUmz81nL-fAL1Xg",
     name: "Simple proofread ✒️",
@@ -300,6 +304,8 @@ export const templates: Workflow[] = [
     updatedAt: "2025-07-03T13:08:44.258Z",
     createdAt: "2025-07-03T11:56:36.873Z",
   },
+
+  // Email response
   {
     id: "1751384543676-ast6lj06g",
     name: "Email response ✉️",
@@ -534,6 +540,8 @@ export const templates: Workflow[] = [
     createdAt: "2025-07-01T15:42:23.676Z",
     updatedAt: "2025-07-03T08:23:40.144Z",
   },
+
+  // Meta prompting
   {
     id: "gr3v83OOBu1eflT6Hgs7u",
     name: "Meta prompting 🤯",
@@ -677,6 +685,8 @@ export const templates: Workflow[] = [
     createdAt: "2025-07-03T08:53:28.599Z",
     updatedAt: "2025-07-03T08:54:23.631Z",
   },
+
+  // Product marketing (advanced)
   {
     id: "1751404486861-ypugrqbgy",
     name: "Product marketing (advanced)",
@@ -954,6 +964,8 @@ export const templates: Workflow[] = [
     createdAt: "2025-07-01T21:14:46.861Z",
     updatedAt: "2025-07-03T08:14:13.125Z",
   },
+
+  // Text improver (advanced)
   {
     id: "1751394123995-ip1wqog5q",
     name: "Text improver (advanced)",
