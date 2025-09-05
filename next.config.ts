@@ -1,8 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  swcMinify: false, // disable minification so errors are readable
-  reactStrictMode: true,
+  experimental: {
+    // leave empty unless you need Turbo or React Compiler
+  },
 };
 
 export default nextConfig;
