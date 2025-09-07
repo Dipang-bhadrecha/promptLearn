@@ -66,19 +66,12 @@ export function AppSidebar() {
   }
 
   // Save rename only once and only if still renaming the same id
-  function handleSaveRename(id: string) {
-    if (renamingId !== id) return; // prevent duplicate calls (e.g. keydown + blur)
-    const newName = localRenameValue.trim();
-    if (newName.length) {
-      try {
-        renameWorkflow(id, newName);
-      } catch (err) {
-        // keep it simple — log if store rename fails
-        console.error("renameWorkflow failed", err);
-      }
+  function handleSaveRename(id: string, newName: string) {
+    const trimmed = newName.trim();
+    if (trimmed) {
+      renameWorkflow(id, trimmed);  // ✅ update only once
     }
     setRenamingId(null);
-    setLocalRenameValue("");
   }
 
   function handleCancelRename() {
@@ -107,19 +100,18 @@ export function AppSidebar() {
         {isRenaming ? (
           <input
             type="text"
-            value={localRenameValue}
-            onChange={(e) => setLocalRenameValue(e.target.value)}
-            onBlur={() => handleSaveRename(workflow.id)} // commit on blur
+            defaultValue={workflow.name}   // ✅ uncontrolled input
+            onBlur={(e) => handleSaveRename(workflow.id, e.target.value)}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
-                // Save and keep behavior deterministic (onBlur might also be fired)
-                handleSaveRename(workflow.id);
-              } else if (e.key === "Escape") {
+                handleSaveRename(workflow.id, (e.target as HTMLInputElement).value);
+              }
+              if (e.key === "Escape") {
                 handleCancelRename();
               }
             }}
             autoFocus
-            ref={(el) => el && el.select()} // auto-select text for convenience
+            ref={(el) => el && el.select()}
             className="w-full rounded px-2 py-1 text-sm bg-transparent outline-none border border-sidebar-border"
           />
         ) : (
@@ -129,8 +121,6 @@ export function AppSidebar() {
             className="w-full pr-8 relative"
           >
             <span className="truncate">{workflow.name}</span>
-
-            {/* Dropdown pinned right */}
             <div className="absolute right-2 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition">
               <WorkflowDropdown
                 onRename={() => handleStartRename(workflow)}
@@ -139,6 +129,7 @@ export function AppSidebar() {
             </div>
           </SidebarMenuButton>
         )}
+
       </SidebarMenuItem>
     );
   });
