@@ -31,55 +31,117 @@ import { useShallow } from "zustand/react/shallow";
 // import ApiKeys from "./api-keys";
 import ImportDialog from "./import-dialogue";
 import Logo from "./logo";
+import { WorkflowDropdown } from "../components/ui/dropdown-menu";
+import { useRename } from "../hooks/useRename";
 
 export function AppSidebar() {
-  const { setTheme,resolvedTheme } = useTheme();
+  const { setTheme, resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
-  const { createWorkflow, switchWorkflow, currentWorkflowId } = useWorkflowStore(
-    useShallow((state) => ({
-      createWorkflow: state.createWorkflow,
-      switchWorkflow: state.switchWorkflow,
-      currentWorkflowId: state.currentWorkflowId,
-    }))
-  );
+  // Local rename state to avoid typing lag/drop issues caused by global state updates
+  const [renamingId, setRenamingId] = useState<string | null>(null);
+  const [localRenameValue, setLocalRenameValue] = useState<string>("");
 
-  const serializedWorkflows = useWorkflowStore(
+  const { createWorkflow, switchWorkflow, currentWorkflowId, deleteWorkflow, renameWorkflow } =
+    useWorkflowStore(
+      useShallow((state) => ({
+        createWorkflow: state.createWorkflow,
+        switchWorkflow: state.switchWorkflow,
+        currentWorkflowId: state.currentWorkflowId,
+        deleteWorkflow: state.deleteWorkflow,
+        renameWorkflow: state.renameWorkflow,
+      }))
+    );
+
+  function handleStartRename(workflow: { id: string; name: string }) {
+    setRenamingId(workflow.id);
+    setLocalRenameValue(workflow.name);
+  }
+
+  function handleDelete(id: string) {
+    if (confirm("Delete this workflow?")) {
+      console.log("Delete workflow", id);
+      deleteWorkflow(id); // already in store
+    }
+  }
+
+  // Save rename only once and only if still renaming the same id
+  function handleSaveRename(id: string) {
+    if (renamingId !== id) return; // prevent duplicate calls (e.g. keydown + blur)
+    const newName = localRenameValue.trim();
+    if (newName.length) {
+      try {
+        renameWorkflow(id, newName);
+      } catch (err) {
+        // keep it simple — log if store rename fails
+        console.error("renameWorkflow failed", err);
+      }
+    }
+    setRenamingId(null);
+    setLocalRenameValue("");
+  }
+
+  function handleCancelRename() {
+    setRenamingId(null);
+    setLocalRenameValue("");
+  }
+
+  const workflows = useWorkflowStore(
+    // Use the real array, NOT serialized strings
     useShallow((state) =>
       state.workflows
-        .map((workflow) => ({
-          name: workflow.name,
-          id: workflow.id,
-          createdAt: new Date(workflow.createdAt).toISOString(),
-        }))
+        .slice() // make a copy before sorting
         .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-        .map((workflow) => `${workflow.name}:${workflow.id}`)
     )
   );
-
-  const workflows = useMemo(() => {
-    return serializedWorkflows.map((workflow) => {
-      const lastDashIndex = workflow.lastIndexOf(":");
-      const name = workflow.substring(0, lastDashIndex);
-      const id = workflow.substring(lastDashIndex + 1);
-      return {
-        name,
-        id,
-      };
-    });
-  }, [serializedWorkflows]);
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  const menuItems = workflows.map((workflow) => (
-    <SidebarMenuItem key={workflow.id}>
-      <SidebarMenuButton onClick={() => switchWorkflow(workflow.id)} isActive={workflow.id === currentWorkflowId}>
-        <span className="truncate">{workflow.name}</span>
-      </SidebarMenuButton>
-    </SidebarMenuItem>
-  ));
+  const menuItems = workflows.map((workflow) => {
+    const isRenaming = renamingId === workflow.id;
+
+    return (
+      <SidebarMenuItem key={workflow.id} className="relative group">
+        {isRenaming ? (
+          <input
+            type="text"
+            value={localRenameValue}
+            onChange={(e) => setLocalRenameValue(e.target.value)}
+            onBlur={() => handleSaveRename(workflow.id)} // commit on blur
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                // Save and keep behavior deterministic (onBlur might also be fired)
+                handleSaveRename(workflow.id);
+              } else if (e.key === "Escape") {
+                handleCancelRename();
+              }
+            }}
+            autoFocus
+            ref={(el) => el && el.select()} // auto-select text for convenience
+            className="w-full rounded px-2 py-1 text-sm bg-transparent outline-none border border-sidebar-border"
+          />
+        ) : (
+          <SidebarMenuButton
+            onClick={() => switchWorkflow(workflow.id)}
+            isActive={workflow.id === currentWorkflowId}
+            className="w-full pr-8 relative"
+          >
+            <span className="truncate">{workflow.name}</span>
+
+            {/* Dropdown pinned right */}
+            <div className="absolute right-2 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition">
+              <WorkflowDropdown
+                onRename={() => handleStartRename(workflow)}
+                onDelete={() => handleDelete(workflow.id)}
+              />
+            </div>
+          </SidebarMenuButton>
+        )}
+      </SidebarMenuItem>
+    );
+  });
 
   return (
     <Sidebar>

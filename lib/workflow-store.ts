@@ -62,6 +62,7 @@ export interface WorkflowState {
 
   // Workflow management
   createWorkflow: (name?: string) => string;
+  renameWorkflow: (id: string, name: string) => void;
   deleteWorkflow: (id: string) => void;
   switchWorkflow: (id: string) => void;
   updateWorkflowName: (id: string, name: string) => void;
@@ -125,6 +126,17 @@ export const useWorkflowStore = create<WorkflowState>()(
         return id;
       },
 
+      renameWorkflow: (id: string, newName: string) => {
+        set((state) => ({
+          workflows: state.workflows.map(workflow =>
+            workflow.id === id
+              ? { ...workflow, name: newName }
+              : workflow
+          )
+        }));
+      },
+
+
       deleteWorkflow: (id: string) => {
         set((state) => {
           const newWorkflows = state.workflows.filter((workflow) => workflow.id !== id);
@@ -154,10 +166,10 @@ export const useWorkflowStore = create<WorkflowState>()(
             workflows: get().workflows.map((c) =>
               c.id === id
                 ? {
-                    ...c,
-                    edges: c.edges.map((e) => ({ ...e, animated: false })),
-                    nodes: c.nodes.map((n) => ({ ...n, data: { ...n.data, loading: false } })),
-                  }
+                  ...c,
+                  edges: c.edges.map((e) => ({ ...e, animated: false })),
+                  nodes: c.nodes.map((n) => ({ ...n, data: { ...n.data, loading: false } })),
+                }
                 : c
             ),
           });
@@ -310,10 +322,10 @@ export const useWorkflowStore = create<WorkflowState>()(
             workflows: state.workflows.map((workflow) =>
               workflow.id === currentWorkflow.id
                 ? {
-                    ...workflow,
-                    nodes: [...workflow.nodes.map((node) => ({ ...node, selected: false })), newNode],
-                    updatedAt: new Date(),
-                  }
+                  ...workflow,
+                  nodes: [...workflow.nodes.map((node) => ({ ...node, selected: false })), newNode],
+                  updatedAt: new Date(),
+                }
                 : workflow
             ),
           };
@@ -332,11 +344,11 @@ export const useWorkflowStore = create<WorkflowState>()(
             workflows: state.workflows.map((workflow) =>
               workflow.id === currentWorkflow.id
                 ? {
-                    ...workflow,
-                    nodes: updatedNodes,
-                    edges: updatedEdges,
-                    updatedAt: new Date(),
-                  }
+                  ...workflow,
+                  nodes: updatedNodes,
+                  edges: updatedEdges,
+                  updatedAt: new Date(),
+                }
                 : workflow
             ),
           };
@@ -355,10 +367,10 @@ export const useWorkflowStore = create<WorkflowState>()(
             workflows: state.workflows.map((workflow) =>
               workflow.id === currentWorkflow.id
                 ? {
-                    ...workflow,
-                    edges: [...workflow.edges, newEdge],
-                    updatedAt: new Date(),
-                  }
+                  ...workflow,
+                  edges: [...workflow.edges, newEdge],
+                  updatedAt: new Date(),
+                }
                 : workflow
             ),
           };
