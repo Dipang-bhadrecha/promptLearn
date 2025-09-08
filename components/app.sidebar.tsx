@@ -140,7 +140,7 @@ export function AppSidebar() {
           <span className="text-2xl tracking-tighter font-sans leading-none font-medium">
             Prompt
             <br />
-            Learn
+            Flow
           </span>
         </div>
       </SidebarHeader>
