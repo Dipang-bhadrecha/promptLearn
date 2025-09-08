@@ -29,10 +29,9 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
 // import ApiKeys from "./api-keys";
-import ImportDialog from "./import-dialogue";
+// import ImportDialog from "./import-dialogue";
 import Logo from "./logo";
 import { WorkflowDropdown } from "../components/ui/dropdown-menu";
-import { useRename } from "../hooks/useRename";
 
 export function AppSidebar() {
   const { setTheme, resolvedTheme } = useTheme();
@@ -69,7 +68,7 @@ export function AppSidebar() {
   function handleSaveRename(id: string, newName: string) {
     const trimmed = newName.trim();
     if (trimmed) {
-      renameWorkflow(id, trimmed);  // ✅ update only once
+      renameWorkflow(id, trimmed);  
     }
     setRenamingId(null);
   }
@@ -80,10 +79,9 @@ export function AppSidebar() {
   }
 
   const workflows = useWorkflowStore(
-    // Use the real array, NOT serialized strings
     useShallow((state) =>
       state.workflows
-        .slice() // make a copy before sorting
+        .slice() 
         .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
     )
   );
@@ -100,7 +98,7 @@ export function AppSidebar() {
         {isRenaming ? (
           <input
             type="text"
-            defaultValue={workflow.name}   // ✅ uncontrolled input
+            defaultValue={workflow.name}  
             onBlur={(e) => handleSaveRename(workflow.id, e.target.value)}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
@@ -112,7 +110,7 @@ export function AppSidebar() {
             }}
             autoFocus
             ref={(el) => el && el.select()}
-            className="w-full rounded px-2 py-1 text-sm bg-transparent outline-none border border-sidebar-border"
+            className="w-full rounded px-2 py-1 text-sm bg-transparent outline-none border border-sidebar-border " // cursor-pointer pointer need to be fixed
           />
         ) : (
           <SidebarMenuButton
@@ -158,12 +156,12 @@ export function AppSidebar() {
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
-                <ImportDialog>
+                {/* <ImportDialog>
                   <SidebarMenuButton>
                     <RiArrowDownBoxLine className="size-4 shrink-0" />
                     Import Learning Docs
                   </SidebarMenuButton>
-                </ImportDialog>
+                </ImportDialog> */}
               </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>
