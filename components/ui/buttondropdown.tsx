@@ -1,7 +1,7 @@
 import * as React from "react"
 import { cn } from "../../lib/utils"
 
-function DropdownButton({
+function ButtonDropdown({
   className,
   ...props
 }: React.ComponentProps<"button">) {
@@ -20,4 +20,4 @@ function DropdownButton({
   )
 }
 
-export { DropdownButton }
+export { ButtonDropdown }

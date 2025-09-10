@@ -5,7 +5,7 @@ import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu"
 import { MoreHorizontal } from "lucide-react"
 import { cn } from "../../lib/utils"
 import { Button } from "./button"
-import { DropdownButton } from "./dropdownbutton"
+import { ButtonDropdown } from "./buttondropdown"
 
 function DropdownMenu({
   ...props
@@ -88,9 +88,9 @@ export function WorkflowDropdown({
           <MoreVerticalIcon className="h-4 w-4" />
         </Button> */}
 
-        <DropdownButton aria-label="Open workflow menu">
+        <ButtonDropdown aria-label="Open workflow menu">
           <MoreHorizontal className="h-4 w-4" />
-        </DropdownButton>
+        </ButtonDropdown>
 
       </DropdownMenuTrigger>
 
