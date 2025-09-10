@@ -3,6 +3,7 @@
 import React from "react";
 import { ReactFlow, Background, Controls } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
+import { Panels } from "./panel";
 
 export default function Workflow() {
   // Empty arrays for nodes and edges mean nothing is rendered on the canvas
@@ -26,6 +27,7 @@ export default function Workflow() {
       >
         <Background />
         <Controls />
+        <Panels />
       </ReactFlow>
     </div>
   );

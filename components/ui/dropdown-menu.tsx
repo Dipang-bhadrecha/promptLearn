@@ -2,8 +2,10 @@
 
 import * as React from "react"
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu"
-import { MoreVerticalIcon } from "lucide-react"
+import { MoreHorizontal } from "lucide-react"
 import { cn } from "../../lib/utils"
+import { Button } from "./button"
+import { DropdownButton } from "./dropdownbutton"
 
 function DropdownMenu({
   ...props
@@ -58,7 +60,7 @@ function DropdownMenuItem({
         "focus:bg-accent focus:text-accent-foreground",
         "data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
         variant === "destructive" &&
-          "text-red-600 focus:bg-red-100 dark:focus:bg-red-900/30",
+        "text-red-600 focus:bg-red-100 dark:focus:bg-red-900/30",
         className
       )}
       {...props}
@@ -77,19 +79,19 @@ export function WorkflowDropdown({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <button
-          className="p-1 
-      rounded-md 
-      text-muted-foreground
-      opacity-70
-      hover:opacity-100 
-      hover:bg-sidebar-accent 
-      hover:text-sidebar-accent-foreground 
-      transition"
+        {/* <Button
+          variant="ghost"
+          size="icon"
+          className="text-muted-foreground hover:text-foreground"
           aria-label="Open workflow menu"
         >
           <MoreVerticalIcon className="h-4 w-4" />
-        </button>
+        </Button> */}
+
+        <DropdownButton aria-label="Open workflow menu">
+          <MoreHorizontal className="h-4 w-4" />
+        </DropdownButton>
+
       </DropdownMenuTrigger>
 
       <DropdownMenuContent side="right" align="start" className="w-32">
