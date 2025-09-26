@@ -31,7 +31,6 @@ import { useShallow } from "zustand/react/shallow";
 // import ApiKeys from "./api-keys";
 // import ImportDialog from "./import-dialogue";
 import Logo from "./logo";
-import { WorkflowDropdown } from "../components/ui/dropdown-menu";
 
 export function AppSidebar() {
   const { setTheme, resolvedTheme } = useTheme();
@@ -119,12 +118,6 @@ export function AppSidebar() {
             className="w-full pr-8 relative"
           >
             <span className="truncate">{workflow.name}</span>
-            <div className="absolute right-2 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition">
-              <WorkflowDropdown
-                onRename={() => handleStartRename(workflow)}
-                onDelete={() => handleDelete(workflow.id)}
-              />
-            </div>
           </SidebarMenuButton>
         )}
 
