@@ -12,7 +12,7 @@ import { toast } from "sonner";
 import z from "zod";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { computeNode, ComputeNodeInput } from "./compute";
+// import { computeNode, ComputeNodeInput } from "./compute";
 import { nanoid } from "nanoid";
 import { newWorkflow, templates } from "../lib/templates";
 
@@ -422,7 +422,7 @@ export const useWorkflowStore = create<WorkflowState>()(
           .getNodes()
           .filter((n) => parentEdges.some((e) => e.source === n.id))
           .sort((a, b) => a.position.x - b.position.x);
-        const inputs: ComputeNodeInput[] = [];
+        // const inputs: ComputeNodeInput[] = [];
 
         for (const n of parentNodes) {
           // Check if execution is aborted
@@ -448,10 +448,10 @@ export const useWorkflowStore = create<WorkflowState>()(
             get().runNode(n.id);
             return;
           }
-          inputs.push({
-            output: parsedData.data.output,
-            label: parsedData.data.label,
-          });
+          // inputs.push({
+          //   output: parsedData.data.output,
+          //   label: parsedData.data.label,
+          // });
         }
 
         // Check if execution is aborted before starting computation
@@ -489,7 +489,7 @@ export const useWorkflowStore = create<WorkflowState>()(
 
         let newData: typeof nodeData;
         try {
-          newData = await Promise.race([computeNode(node.type, inputs, nodeData, abortSignal, nodeId), timeoutPromise]);
+          // newData = await Promise.race([computeNode(node.type, inputs, nodeData, abortSignal, nodeId), timeoutPromise]);
         } catch (error) {
           // Handle abort or other errors
           parentEdges.forEach((e) => {
@@ -520,15 +520,15 @@ export const useWorkflowStore = create<WorkflowState>()(
           get().updateEdgeProps(e.id, { animated: false });
         });
 
-        get().updateNodeData(nodeId, {
-          ...newData,
-          loading: false,
-        });
+        // get().updateNodeData(nodeId, {
+        //   ...newData,
+        //   loading: false,
+        // });
 
-        if (newData?.error) {
-          // stop here
-          return;
-        }
+        // if (newData?.error) {
+        //   // stop here
+        //   return;
+        // }
 
         // Check if execution is aborted before running connected nodes
         if (abortSignal?.aborted) return;
