@@ -67,7 +67,7 @@ export function AppSidebar() {
   function handleSaveRename(id: string, newName: string) {
     const trimmed = newName.trim();
     if (trimmed) {
-      renameWorkflow(id, trimmed);  
+      renameWorkflow(id, trimmed);
     }
     setRenamingId(null);
   }
@@ -80,7 +80,7 @@ export function AppSidebar() {
   const workflows = useWorkflowStore(
     useShallow((state) =>
       state.workflows
-        .slice() 
+        .slice()
         .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
     )
   );
@@ -97,7 +97,7 @@ export function AppSidebar() {
         {isRenaming ? (
           <input
             type="text"
-            defaultValue={workflow.name}  
+            defaultValue={workflow.name}
             onBlur={(e) => handleSaveRename(workflow.id, e.target.value)}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
@@ -108,7 +108,10 @@ export function AppSidebar() {
               }
             }}
             autoFocus
-            ref={(el) => el && el.select()}
+            ref={(el) => {
+              if (el) el.select();
+            }}
+
             className="w-full rounded px-2 py-1 text-sm bg-transparent outline-none border border-sidebar-border " // cursor-pointer pointer need to be fixed
           />
         ) : (
