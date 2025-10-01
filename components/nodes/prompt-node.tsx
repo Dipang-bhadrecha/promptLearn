@@ -12,8 +12,9 @@ export function PromptNode({ id, data, onFocusRequest, setDisableZoom, selected 
   const [loading, setLoading] = useState(false);
   const [isChatFocused, setIsChatFocused] = useState(false);
 
-  const chatEndRef = useRef<HTMLDivElement | null>(null);
-  const chatAreaRef = useRef<HTMLDivElement | null>(null);
+  const chatEndRef = useRef<HTMLDivElement>(null!);
+  const chatAreaRef = useRef<HTMLDivElement>(null!);
+
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 
   // Auto-scroll chat
