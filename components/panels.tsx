@@ -1,19 +1,25 @@
 "use client";
 
-import { Button } from "../components/ui/button";
+import { Button } from "./ui/button";
 import { getCleanedWorkflow, useWorkflowStore, type WorkflowState } from "../lib/workflow-store";
-import { SidebarTrigger } from "../components/ui/sidebar";
-import { Input } from "../components/ui/input";
+import { SidebarTrigger } from "./ui/sidebar";
+import { Input } from "./ui/input";
 import {
   RiAiGenerate2,
+  RiArrowUpBoxLine,
   RiChatQuoteLine,
+  RiDeleteBin2Line,
   RiMarkdownLine,
+  RiStopLine,
   RiTextSnippet,
 } from "@remixicon/react";
 import { Panel, useReactFlow } from "@xyflow/react";
-import { useShallow } from "zustand/react/shallow";
+import { useTheme } from "next-themes";
+import Image from "next/image";
 import Link from "next/link";
 import { memo, useCallback } from "react";
+import { toast } from "sonner";
+import { useShallow } from "zustand/react/shallow";
 
 export const Panels = memo(function Panels() {
   return (
