@@ -42,7 +42,8 @@ export function ChatNodeCard({
                 : "bg-gray-100 dark:bg-neutral-800 text-left"
             }`}
           >
-            <ReactMarkdown>{msg.text}</ReactMarkdown>
+            {/* <ReactMarkdown>{msg.text}</ReactMarkdown> */}
+            {msg.text}
           </div>
         ))}
         
