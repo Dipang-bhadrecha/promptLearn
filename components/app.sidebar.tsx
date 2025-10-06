@@ -134,9 +134,9 @@ export function AppSidebar() {
         <div className="px-2 flex items-center gap-2">
           {/* <Logo className="size-18" /> */}
           <span className="text-2xl tracking-tighter font-sans leading-none font-medium">
-            Prompt
-            <br />
-            Flow
+            Prompt Flow
+            {/* <br /> */}
+            {/* Flow */}
           </span>
         </div>
       </SidebarHeader>
