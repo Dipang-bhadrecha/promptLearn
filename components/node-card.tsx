@@ -1,67 +1,52 @@
+import { cn } from "@/lib/utils";
+import { Node, NodeProps, NodeResizeControl } from "@xyflow/react";
+import { RiExpandDiagonalS2Line } from "@remixicon/react";
 
-"use client";
-
-import React from "react";
-import ReactMarkdown from "react-markdown";
-
-
-export function ChatNodeCard({
+export function NodeCard({
   children,
-  history = [],
-  loading = false,
-  onChatAreaClick,
-  onChatWheel,
-  chatAreaRef,
-  chatEndRef,
+  title,
+  node,
 }: {
-  children: React.ReactNode; // This will be your input area
-  history: Array<{ role: "user" | "assistant"; text: string }>;
-  loading?: boolean;
-  onChatAreaClick?: (e: React.MouseEvent) => void;
-  onChatWheel?: (e: React.WheelEvent) => void;
-  chatAreaRef?: React.RefObject<HTMLDivElement>;
-  chatEndRef?: React.RefObject<HTMLDivElement>;
+  children: React.ReactNode;
+  title: string | React.ReactNode;
+  node: NodeProps<Node>;
 }) {
   return (
     <div
-      className="bg-white dark:bg-neutral-900 border rounded-xl shadow-md flex flex-col overflow-hidden w-full h-full"
+      className={cn(
+        "flex flex-col bg-card rounded-xl h-full transition-all text-card-foreground border border-border"
+      )}
     >
-      {/* Chat History - Your Design */}
+      {/* Header */}
       <div
-        ref={chatAreaRef}
-        className="flex-1 p-3 space-y-3 overflow-y-auto custom-scroll"
-        onDoubleClick={onChatAreaClick}
-        onWheel={onChatWheel}
-      >
-        {history.map((msg, idx) => (
-          <div
-            key={idx}
-            className={`p-2 rounded-lg text-xl whitespace-pre-wrap ${
-              msg.role === "user"
-                ? "bg-blue-100 dark:bg-blue-800 self-end text-right"
-                : "bg-gray-100 dark:bg-neutral-800 text-left"
-            }`}
-          >
-            <ReactMarkdown>{msg.text}</ReactMarkdown>
-            {/* {msg.text} */}
-          </div>
-        ))}
-        
-        {loading && (
-          <div className="p-2 rounded-lg bg-gray-50 dark:bg-neutral-800 text-sm">
-            Typing...
-          </div>
+        className={cn(
+          "bg-card transition-colors border-b p-3 flex items-center gap-3 rounded-t-xl",
+          node.selected && "bg-muted"
         )}
-        <div ref={chatEndRef} />
+      >
+        <div
+          className={cn(
+            "text-sm text-muted-foreground transition-colors",
+            node.selected && "text-primary"
+          )}
+        >
+          {title}
+        </div>
       </div>
 
-      {/* Input Area - Passed as children */}
-      {children}
+      {/* Resize control appears when node is selected */}
+      {node.selected && (
+        <NodeResizeControl
+          minWidth={300}
+          minHeight={200}
+          className="hover:text-foreground text-muted-foreground !border-none !bg-transparent"
+        >
+          <RiExpandDiagonalS2Line className="size-5 shrink-0" />
+        </NodeResizeControl>
+      )}
 
-      
+      {/* Node-specific content */}
+      {children}
     </div>
   );
 }
-
-
-
