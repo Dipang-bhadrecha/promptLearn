@@ -29,7 +29,7 @@ export function ChatPanel() {
         setLoading(true);
 
         try {
-            const res = await fetch("http://localhost:3003/api/chat", {
+            const res = await fetch("http://ec2-43-204-150-198.ap-south-1.compute.amazonaws.com:3003/api/chat", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ prompt }),
