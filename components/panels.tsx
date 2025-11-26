@@ -68,9 +68,9 @@ const BottomCenterPanel = memo(function BottomCenterPanel() {
             type: type,
           });
           break;
-        case "ai":
+        case "TextNode":
           addNode({
-            data: { systemPrompt: "" },
+            data: { text: "" },
             position,
             height: 500,
             width: 450,
@@ -107,11 +107,11 @@ const BottomCenterPanel = memo(function BottomCenterPanel() {
           <RiTextSnippet className="size-5 shrink-0" />
           <span className="hidden sm:block">Prompt</span>
         </Button>
-        {/* <Button variant="outline" onClick={() => handleAddNode("ai")}>
+        <Button variant="outline" onClick={() => handleAddNode("ai")}>
           <RiAiGenerate2 className="size-5 shrink-0" />
-          <span className="hidden sm:block">Button 2</span>
+          <span className="hidden sm:block">TextNode</span>
         </Button>
-        <Button variant="outline" onClick={() => handleAddNode("markdown")}>
+        {/* <Button variant="outline" onClick={() => handleAddNode("markdown")}>
           <RiMarkdownLine className="size-5 shrink-0" />
           <span className="hidden sm:block">Button 3</span>
         </Button>

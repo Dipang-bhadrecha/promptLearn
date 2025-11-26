@@ -8,6 +8,7 @@ import { useMemo } from "react";
 import { useShallow } from "zustand/react/shallow";
 import Logo from "./logo";
 import { PromptNode } from "./nodes/prompt-node";
+import { TextNode } from "./nodes/textArea-node";
 import { Panels } from "./panels";
 import { SidebarTrigger } from "./ui/sidebar";
 import { useIsMobile } from '../hooks/useisMobile';
@@ -15,7 +16,8 @@ import { useIsMobile } from '../hooks/useisMobile';
 const panOnDrag = [1, 2];
 
 const nodeTypes: NodeTypes = {
-  prompt: PromptNode
+  prompt: PromptNode,
+  text: TextNode
 };
 
 const selector = (state: WorkflowState) => ({
