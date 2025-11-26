@@ -208,9 +208,6 @@ export default function LandingPage() {
                     <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
                         <div className="flex items-center gap-3 mb-8">
                             {/* replace with your real logo if you have one */}
-                            <div className="h-10 w-10 rounded-full bg-white/90 flex items-center justify-center text-black font-bold text-lg">
-                                PL
-                            </div>
                             <span className="text-3xl md:text-4xl font-extrabold tracking-tight">
                                 PromptLearn
                             </span>
