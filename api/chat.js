@@ -7,7 +7,7 @@ export default async function handler(req, res) {
   console.log('🔍 Proxy received request:', req.body);
 
   try {
-    const response = await fetch('http://ec2-43-204-150-198.ap-south-1.compute.amazonaws.com:3003/api/chat', {
+    const response = await fetch('http://ec2-13-233-158-206.ap-south-1.compute.amazonaws.com:3003/api/chat', {
       
       method: 'POST',
       headers: {
