@@ -2,6 +2,8 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import rehypeHighlight from "rehype-highlight";
 
 type ChatMessage = { role: "user" | "assistant"; text: string };
 
@@ -29,7 +31,8 @@ export function ChatPanel() {
         setLoading(true);
 
         try {
-            const res = await fetch("api/chat", {
+            // const res = await fetch("http://localhost:3003/api/chat", { // connecting a local backend server
+                const res = await fetch("/api/chat", { // connecting a online backend server
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ prompt }),
@@ -86,12 +89,20 @@ export function ChatPanel() {
                     <div
                         key={i}
                         className={`p-2 rounded-lg max-w-[100%] ${msg.role === "user"
-                                ? "ml-auto bg-blue-500 text-white"
-                                : "mr-auto bg-muted"
+                            ? "ml-auto bg-blue-500 text-white"
+                            : "mr-auto bg-muted"
                             }`}
                     >
-                       <ReactMarkdown>{msg.text}</ReactMarkdown>
-                       {/* {msg.text} */}
+                        <div className="markdown">
+                            {/* <ReactMarkdown>{msg.text}</ReactMarkdown>  */}
+
+                            <ReactMarkdown
+                                remarkPlugins={[remarkGfm]}
+                                rehypePlugins={[rehypeHighlight]}
+                            >
+                                {msg.text}
+                            </ReactMarkdown>
+                        </div>
                     </div>
                 ))}
                 {loading && (
@@ -111,7 +122,7 @@ export function ChatPanel() {
                     onKeyDown={handleKeyDown}
                     placeholder="Type your message..."
                     className="
-            flex-1 p-2 border rounded-lg text-sm resize-none
+            flex-1 p-2 border rounded-lg text-base resize-none
             bg-white dark:bg-neutral-800 dark:border-neutral-700
             placeholder:text-gray-400 dark:placeholder:text-gray-500
             focus:outline-none focus:ring-2 focus:ring-blue-500

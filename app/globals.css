@@ -137,6 +137,63 @@
   --selection-foreground: oklch(0.205 0 0);
 }
 
+.markdown {
+  line-height: 1.7;
+  font-size: 14px;
+}
+
+.markdown h1, .markdown h2, .markdown h3 {
+  font-weight: 700;
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+.markdown pre {
+  background: #171718;
+  padding: 16px;
+  border-radius: 12px;
+  overflow-x: auto;
+  margin: 14px 0;
+}
+
+.markdown code {
+  /* background: #1e293b; */
+  padding: 3px 6px;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+/* Inline code only (not inside pre) */
+.markdown :not(pre) > code {
+  background: #1e293b;
+}
+
+.markdown ul {
+  padding-left: 20px;
+  margin-top: 8px;
+}
+
+.markdown li {
+  margin-bottom: 6px;
+}
+
+/* comments */
+.markdown .hljs-comment {
+  color: #6a9955; /* VS Code green-ish */
+}
+
+/* keywords (int, if, class...) */
+.markdown .hljs-keyword {
+  color: #569cd6;
+}
+
+/* strings */
+.markdown .hljs-string {
+  color: #ce9178;
+}
+
+
+
 @layer base {
   * {
     @apply border-border outline-ring/50 font-sans;
