@@ -4,7 +4,6 @@ import React from "react";
 import { NodeCard } from "../node-card";
 import { Handle, Position } from "@xyflow/react";
 import { ChatPanel } from "../ui/chatPanel"; 
-import { ChatInputBar } from "../ui/chatInputBar";
 
 export function PromptNode(props: any) {
   return (

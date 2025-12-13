@@ -17,7 +17,7 @@ const panOnDrag = [1, 2];
 
 const nodeTypes: NodeTypes = {
   prompt: PromptNode,
-  text: TextNode
+  textNode: TextNode
 };
 
 const selector = (state: WorkflowState) => ({
