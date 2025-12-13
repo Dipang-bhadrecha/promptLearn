@@ -8,7 +8,7 @@ import { ChatInputBar } from "../ui/chatInputBar";
 
 export function PromptNode(props: any) {
   return (
-    <>
+
       <NodeCard
         node={props}
         title={
@@ -19,15 +19,12 @@ export function PromptNode(props: any) {
           />
         }
       >
-        <ChatPanel />
-        {/* <ChatInputBar /> */}
-      </NodeCard>
+    <div className="flex flex-col h-full min-h-0">
+      <ChatPanel />
+    </div>
 
-      {/* Handles */}
-      {/* <Handle type="target" position={Position.Top} />
-      <Handle type="source" position={Position.Bottom} />
       <Handle type="source" position={Position.Right} />
-      <Handle type="target" position={Position.Left} /> */}
-    </>
+    <Handle type="target" position={Position.Left} />
+      </NodeCard>
   );
 }

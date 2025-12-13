@@ -31,8 +31,8 @@ export function ChatPanel() {
         setLoading(true);
 
         try {
-            // const res = await fetch("http://localhost:3003/api/chat", { // connecting a local backend server
-                const res = await fetch("/api/chat", { // connecting a online backend server
+            const res = await fetch("http://localhost:3003/api/chat", { // connecting a local backend server
+            // const res = await fetch("/api/chat", { // connecting a online backend server
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ prompt }),
@@ -53,6 +53,7 @@ export function ChatPanel() {
         }
     };
 
+    // Handle prompt input area - submit on Enter, new line on Shift+Enter
     const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
         if (e.key === "Enter" && !e.shiftKey) {
             e.preventDefault();
@@ -60,21 +61,22 @@ export function ChatPanel() {
         }
     };
 
-    // Allow mouse wheel scroll inside chat without zooming the canvas
-    const handleWheel = (e: React.WheelEvent<HTMLDivElement>) => {
+    // Handle arrow key scrolling in chat area
+    const handleChatKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
         const el = chatAreaRef.current;
         if (!el) return;
 
-        const atTop = el.scrollTop === 0;
-        const atBottom = el.scrollTop + el.clientHeight >= el.scrollHeight;
+        const scrollDistance = 50;
 
-        if ((e.deltaY < 0 && !atTop) || (e.deltaY > 0 && !atBottom)) {
-            // Let the scroll happen
-            return;
+        if (e.key === "ArrowUp") {
+            e.preventDefault();
+            e.stopPropagation();
+            el.scrollTop -= scrollDistance;
+        } else if (e.key === "ArrowDown") {
+            e.preventDefault();
+            e.stopPropagation();
+            el.scrollTop += scrollDistance;
         }
-
-        // Prevent canvas zoom when trying to scroll beyond limits
-        e.preventDefault();
     };
 
     return (
@@ -82,20 +84,20 @@ export function ChatPanel() {
             {/* Chat history area */}
             <div
                 ref={chatAreaRef}
-                onWheel={handleWheel}
-                className="flex-1 overflow-y-auto p-3 space-y-3 bg-background/50"
+                onKeyDown={handleChatKeyDown}
+                tabIndex={0}
+                className="flex-1 min-h-0 overflow-y-auto p-3 space-y-3"
             >
                 {history.map((msg, i) => (
                     <div
                         key={i}
                         className={`p-2 rounded-lg max-w-[100%] ${msg.role === "user"
-                            ? "ml-auto bg-blue-500 text-white"
-                            : "mr-auto bg-muted"
+                                ? "ml-auto bg-blue-500/90 text-white"
+                                : "mr-auto bg-white/10 text-white"
                             }`}
+
                     >
                         <div className="markdown">
-                            {/* <ReactMarkdown>{msg.text}</ReactMarkdown>  */}
-
                             <ReactMarkdown
                                 remarkPlugins={[remarkGfm]}
                                 rehypePlugins={[rehypeHighlight]}
@@ -114,30 +116,24 @@ export function ChatPanel() {
             </div>
 
             {/* Prompt input area */}
-            <div className="p-3 flex gap-2 items-end border-t bg-background">
+            <div className="p-3 flex gap-2 items-end border-t border-t-transparent bg-transparent">
                 <textarea
                     ref={textareaRef}
                     value={prompt}
                     onChange={(e) => setPrompt(e.target.value)}
                     onKeyDown={handleKeyDown}
                     placeholder="Type your message..."
-                    className="
-            flex-1 p-2 border rounded-lg text-base resize-none
-            bg-white dark:bg-neutral-800 dark:border-neutral-700
-            placeholder:text-gray-400 dark:placeholder:text-gray-500
-            focus:outline-none focus:ring-2 focus:ring-blue-500
-          "
+                    className="flex-1 p-2 border rounded-lg text-base resize-none
+                               bg-transparent dark:bg-transparent border-neutral-700 text-white"
                     rows={1}
                     style={{ minHeight: "44px", maxHeight: "120px" }}
                 />
                 <button
                     onClick={handleSubmit}
                     disabled={loading || !prompt.trim()}
-                    className="
-            px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg
-            disabled:bg-gray-300 disabled:cursor-not-allowed
-            min-h-[44px] flex items-center justify-center
-          "
+                    className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg
+                               disabled:bg-gray-300 disabled:cursor-not-allowed
+                               min-h-[44px] flex items-center justify-center"
                 >
                     {loading ? "..." : "Send"}
                 </button>
