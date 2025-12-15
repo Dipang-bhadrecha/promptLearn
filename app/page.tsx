@@ -14,12 +14,6 @@ export default function LandingPage() {
                 </div>
 
                 <nav className="hidden md:flex items-center gap-4 text-sm text-white/70">
-                    <a href="#how-it-works" className="hover:text-white">
-                        How it works
-                    </a>
-                    {/* <a href="#templates" className="hover:text-white">
-            Templates
-          </a> */}
                     <button className="px-4 py-2 rounded-full bg-white text-black font-semibold  hover:bg-white/20 transition">
                         My Workspaces
                     </button>
@@ -43,7 +37,7 @@ export default function LandingPage() {
 
                 {/* Hero content */}
                 {/* <div className="relative z-10 flex h-full w-full items-center justify-center"> */}
-                <div className="relative z-10 flex h-full w-full items-center justify-center pt-24 md:pt-0">
+                <div className="relative z-10 flex h-full w-full items-center justify-center pt-24 md:pt-9">
 
                     <div className="mx-auto flex max-w-4xl flex-col items-center px-6 text-center">
                         <div className="mb-4 rounded-full bg-[#00FFD1]/25 px-4 py-1 
@@ -52,34 +46,35 @@ export default function LandingPage() {
                             AI-powered learning workspace
                         </div>
 
+                        <div>
+                            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight md:pt-5">
+                                Learn Faster with
+                            </h1>
+                            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-5">
+                                Zero Scrolling.
+                            </h1>
+                            <h2 className="font-bold md:text-2xl mb-6">
+                                connect to your older chat response with zero scroll
+                            </h2>
 
-                        <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight md:pt-5">
-                            Learn Faster with
-                        </h1>
-                        <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-5">
-                            Zero Scrolling.
-                        </h1>
-                        <h2 className="font-bold md:text-2xl mb-6">
-                            connect to your older chat response with zero scroll
-                        </h2>
+                            <p className="text-base md:text-lg text-white/80 max-w-2xl mb-8 ">
+                                PromptLearn is an AI learning platform designed for people who think by asking questions.
+                                Instead of forcing learning into a single scrolling chat, PromptLearn turns your interaction with AI into a visual, structured learning flow.
+                            </p>
+                        </div>
 
-                        <p className="text-base md:text-lg text-white/80 max-w-2xl mb-8 ">
-                            PromptLearn is an AI learning platform designed for people who think by asking questions.
-                            Instead of forcing learning into a single scrolling chat, PromptLearn turns your interaction with AI into a visual, structured learning flow.
-                        </p>
 
                         <div className="flex flex-col sm:flex-row items-center gap-4 md:pt-60">
-                             {/* <Link href="/app">
-                                <button className="px-8 py-3 rounded-full bg-white text-black font-semibold text-base md:text-lg hover:scale-105 hover:shadow-lg transition">
-                                    Guest mode
-                                </button>
-                            </Link> */}
                             <Link href="/app">
                                 <button className="px-8 py-3 rounded-full bg-white text-black font-semibold text-base md:text-lg hover:scale-105 hover:shadow-lg transition">
                                     Start a Learning Space
                                 </button>
+                                <p className="mt-3 text-s text-white/60 font-bold">
+                                    No sign-up required. Save and access your work anytime by creating an account.
+                                </p>
+
                             </Link>
-                            
+
                         </div>
                     </div>
                 </div>
@@ -103,7 +98,7 @@ export default function LandingPage() {
                     <div className="rounded-2xl border border-white/10 bg-white/5 p-6 text-left">
                         <h3 className="font-semibold mb-2">Create Follow-Up Nodes </h3>
                         <p className="text-sm text-white/70">
-                            When a follow-up question arises, open a new linked node instead of replacing or scrolling past the original response — your learning context stays intact. 
+                            When a follow-up question arises, open a new linked node instead of replacing or scrolling past the original response — your learning context stays intact.
                         </p>
                     </div>
 
