@@ -12,7 +12,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarMenuSkeleton,
-} from "../components/ui/sidebar";
+} from "./ui/sidebar";
 import { useWorkflowStore } from "../lib/workflow-store";
 import {
   RiAddLine,
