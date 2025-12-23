@@ -79,7 +79,7 @@ export default function Workflow() {
       className="w-full h-full animate-in fade-in-0 duration-300"
       fitView
       selectionMode={SelectionMode.Partial}
-      deleteKeyCode={["Backspace", "Delete"]}
+      deleteKeyCode={["Delete"]}
       multiSelectionKeyCode={["Shift", "Control", "Meta"]}
       minZoom={0.2}
       fitViewOptions={{

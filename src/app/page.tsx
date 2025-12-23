@@ -65,7 +65,7 @@ export default function LandingPage() {
 
 
                         <div className="flex flex-col sm:flex-row items-center gap-4 md:pt-60">
-                            <Link href="/app">
+                            <Link href="/">
                                 <button className="px-8 py-3 rounded-full bg-white text-black font-semibold text-base md:text-lg hover:scale-105 hover:shadow-lg transition">
                                     Start a Learning Space
                                 </button>
@@ -178,3 +178,21 @@ export default function LandingPage() {
         </main>
     );
 }
+
+// import Navbar from "../components/navbar";
+// import Hero from "../components/hero";
+// import FeatureStack from "../components/featureStack";
+// import UseCases from "../components/useCase";
+// import Footer from "../components/footer";
+
+// export default function Page() {
+//   return (
+//     <>
+//       <Navbar />
+//       <Hero />
+//       {/* <FeatureStack /> */}
+//       <UseCases />
+//       <Footer />
+//     </>
+//   );
+// }

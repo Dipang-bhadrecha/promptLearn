@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { cn } from "../lib/utils";
 import { Node, NodeProps, NodeResizeControl } from "@xyflow/react";
 import { RiExpandDiagonalS2Line } from "@remixicon/react";
 
