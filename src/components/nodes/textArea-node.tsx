@@ -4,7 +4,7 @@ import React from "react";
 import { NodeCard } from "../node-card";
 import { Handle, NodeResizeControl, Position } from "@xyflow/react";
 import { RiDeleteBin2Line, RiExpandDiagonalS2Line, RiFileCopyLine } from "@remixicon/react";
-import { cn } from "@/lib/utils";
+import { cn } from "../../lib/utils";
 import { Textarea } from "../ui/textarea";
 
 export function TextNode(props: any) {
