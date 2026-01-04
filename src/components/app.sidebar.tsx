@@ -183,7 +183,27 @@ export function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
+
+        
         <SidebarMenu>
+          <SidebarMenuItem>
+            <Link href="/graph">
+              <SidebarMenuButton>
+                <RiComputerLine className="size-4 shrink-0" />
+                Switch to graph
+              </SidebarMenuButton>
+            </Link>
+          </SidebarMenuItem>
+
+          <SidebarMenuItem>
+            <Link href="/chat">
+              <SidebarMenuButton>
+                <RiComputerLine className="size-4 shrink-0" />
+                Switch to chat
+              </SidebarMenuButton>
+            </Link>
+          </SidebarMenuItem>
+          
           <SidebarMenuItem>
             {/* <ApiKeys>
               <SidebarMenuButton>
@@ -200,6 +220,7 @@ export function AppSidebar() {
               </SidebarMenuButton>
             </Link>
           </SidebarMenuItem>
+
           <SidebarMenuItem>
             {mounted ? (
               <SidebarMenuButton

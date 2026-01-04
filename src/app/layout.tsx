@@ -34,7 +34,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark" suppressHydrationWarning>
-      <body className={`${geistSans.variable} ${geistMono.variable} ${pangolin.variable} `}> //bg-white text-black antialiased
+      <body className={`${geistSans.variable} ${geistMono.variable} ${pangolin.variable} `}> 
         <ThemeProvider attribute="class"
             defaultTheme="system"
             enableSystem
@@ -46,3 +46,5 @@ export default function RootLayout({
     </html>
   );
 }
+
+//bg-white text-black antialiased
