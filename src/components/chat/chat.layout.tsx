@@ -1,5 +1,4 @@
 import ChatStream from "./chat.stream";
-import ChatInput from "./chat.input";
 import ChatContext from "./chat.context";
 import { useChatUIStore } from "./chat-ui.store";
 import { PanelRight } from "lucide-react";
@@ -19,11 +18,8 @@ export default function ChatLayout() {
           </div>
         </div>
 
-        <div className=" border-neutral-800 px-6 py-4 bg-[#111]">
-          <ChatInput />
-        </div>
-
       </div>
+      
 
       {/* Right Panel */}
      <div

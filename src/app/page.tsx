@@ -1,8 +1,12 @@
 // app/page.tsx
+"use client";
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
+import AuthModal from "../components/authModal";
 
 export default function LandingPage() {
+    const [open, setOpen] = useState(false);
     return (
         <main className="min-h-[100svh] bg-[#020617] text-white">
             {/* NAVBAR */}
@@ -17,6 +21,14 @@ export default function LandingPage() {
                     <button className="px-4 py-2 rounded-full bg-white text-black font-semibold  hover:bg-white/20 transition">
                         My Workspaces
                     </button>
+
+                    <button
+                        onClick={() => setOpen(true)}
+                        className="px-4 py-2 rounded-full bg-white text-black font-semibold  hover:bg-white/20 transitionw"
+                    >
+                        Sign in / Sign up
+                    </button>
+                    {open && <AuthModal onClose={() => setOpen(false)} />}
 
                 </nav>
             </header>
@@ -65,7 +77,7 @@ export default function LandingPage() {
 
 
                         <div className="flex flex-col sm:flex-row items-center gap-4 md:pt-60">
-                            <Link href="/graph">
+                            <Link href="/chat">
                                 <button className="px-8 py-3 rounded-full bg-white text-black font-semibold text-base md:text-lg hover:scale-105 hover:shadow-lg transition">
                                     Start a Learning Space
                                 </button>
