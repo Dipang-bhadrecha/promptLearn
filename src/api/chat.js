@@ -10,10 +10,9 @@ export default async function handler(req, res) {
     const response = await fetch('http://ec2-13-233-158-206.ap-south-1.compute.amazonaws.com:3003/api/chat', {
       
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: {'Content-Type': 'application/json'},
       body: JSON.stringify(req.body),
+      credentials: 'include',
     });
 
     console.log('🌐 AWS Response Status:', response.status, response.statusText);
