@@ -1,34 +1,29 @@
 "use client";
 
-import { SidebarProvider, SidebarInset } from "../../components/ui/sidebar";
+import { SidebarProvider, SidebarInset, RightSidebarProvider, Sidebar } from "../../components/ui/sidebar";
 import { AppSidebar } from "../../components/app.sidebar";
 import Chat from "../../components/chat/chat";
 import RightSidebar from "../../components/chat/right.sidebar";
+import ChatStreamPanel from "@/src/components/chat/chatStreamPanel";
 
 export default function Home() {
   return (
     <div className="flex h-dvh w-full overflow-hidden">
 
-      {/* LEFT SIDEBAR PROVIDER */}
       <SidebarProvider>
+  <RightSidebarProvider>
 
-        {/* Left Sidebar */}
-        <AppSidebar />
+    <AppSidebar />
 
-        {/* MAIN CONTENT + RIGHT SIDEBAR PROVIDER */}
-        <SidebarProvider>
+    <Chat />
 
-          {/* Main Content */}
-          <SidebarInset >
-            <Chat />
-          </SidebarInset>
+    <Sidebar side="right">
+      <RightSidebar />
+    </Sidebar>
 
-          {/* Right Sidebar */}
-          <RightSidebar />
+  </RightSidebarProvider>
+</SidebarProvider>
 
-        </SidebarProvider>
-
-      </SidebarProvider>
 
     </div>
   );

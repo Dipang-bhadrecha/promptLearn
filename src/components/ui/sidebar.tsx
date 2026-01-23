@@ -43,8 +43,49 @@ type SidebarContextProps = {
   toggleSidebar: () => void
 }
 
-const SidebarContext = React.createContext<SidebarContextProps | null>(null)
+type RightSidebarContextProps = {
+  open: boolean
+  toggleSidebar: () => void
+}
 
+const SidebarContext = React.createContext<SidebarContextProps | null>(null)
+const RightSidebarContext = React.createContext<RightSidebarContextProps | null>(null)
+
+function RightSidebarProvider({ children }: { children: React.ReactNode }) {
+  const [open, setOpen] = React.useState(true)
+  const toggleSidebar = () => setOpen(o => !o)
+
+  return (
+    <RightSidebarContext.Provider value={{ open, toggleSidebar }}>
+      {children}
+    </RightSidebarContext.Provider>
+  )
+}
+
+function RightSidebarTrigger({
+  className,
+  ...props
+}: React.ComponentProps<typeof Button>) {
+  const { toggleSidebar, open } = useRightSidebar()
+
+  return (
+    <Button
+      variant="ghost"
+      size="icon"
+      className={cn("size-9 cursor-pointer", className)}
+      onClick={toggleSidebar}
+      {...props}
+    >
+      {open ? <RiSideBarFill className="size-5" /> : <RiSideBarLine className="size-5" />}
+    </Button>
+  )
+}
+
+function useRightSidebar() {
+  const ctx = React.useContext(RightSidebarContext)
+  if (!ctx) throw new Error("useRightSidebar must be used inside RightSidebarProvider")
+  return ctx
+}
 
 function useSidebar() {
   const context = React.useContext(SidebarContext)
@@ -165,7 +206,10 @@ function Sidebar({
   variant?: "sidebar" | "floating" | "inset"
   collapsible?: "offcanvas" | "icon" | "none"
 }) {
-  const { isMobile, state, openMobile, setOpenMobile } = useSidebar()
+  // const { isMobile, state, openMobile, setOpenMobile } = useSidebar()
+  const left = useSidebar()
+  const right = useRightSidebar()
+
 
   if (collapsible === "none") {
     return (
@@ -181,32 +225,6 @@ function Sidebar({
       </div>
     )
   }
-
-  function RightSidebarTrigger({
-    className,
-    onClick,
-    ...props
-  }: React.ComponentProps<typeof Button>) {
-    const { toggleSidebar } = useSidebar();
-
-    return (
-      <Button
-        data-sidebar="right-trigger"
-        variant="ghost"
-        size="icon"
-        className={cn("size-9 cursor-pointer", className)}
-        onClick={(event) => {
-          onClick?.(event);
-          toggleSidebar();
-        }}
-        {...props}
-      >
-        <span className="sr-only">Toggle Right Sidebar</span>
-        ▶
-      </Button>
-    );
-  }
-
 
   // if (isMobile) {
   //   return (
@@ -236,8 +254,9 @@ function Sidebar({
   return (
     <div
       className="group peer text-sidebar-foreground hidden md:block"
-      data-state={state}
-      data-collapsible={state === "collapsed" ? collapsible : ""}
+      // data-state={state}
+      data-state={side === "left" ? (left.state) : (right.open ? "expanded" : "collapsed")}
+      data-collapsible={side === "left" ? (left.state === "collapsed" ? collapsible : "") : (right.open ? "" : collapsible)}
       data-variant={variant}
       data-side={side}
       data-slot="sidebar"
@@ -306,11 +325,6 @@ function SidebarTrigger({
     </Button>
   )
 }
-
-export default function RightSidebarTrigger() {
-  return <SidebarTrigger />;
-}
-
 
 function SidebarRail({ className, ...props }: React.ComponentProps<"button">) {
   const { toggleSidebar } = useSidebar()
@@ -754,8 +768,8 @@ export {
   SidebarMenuSubItem,
   SidebarProvider,
   SidebarRail,
-  // SidebarSeparator,
-  SidebarTrigger,
   useSidebar,
-  RightSidebarTrigger
+  RightSidebarProvider,
+  useRightSidebar,
+  RightSidebarTrigger, SidebarTrigger,
 }
