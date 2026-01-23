@@ -28,13 +28,14 @@ import { useTheme } from "next-themes";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
-// import ApiKeys from "./api-keys";
-// import ImportDialog from "./import-dialogue";
+import { useChatStore } from "./chat/chat.store";
 import Logo from "./logo";
+import { apiRequest } from "../lib/api";
 
 export function AppSidebar() {
   const { setTheme, resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  const setConversationId = useChatStore((s) => s.setConversationId);
 
   // Local rename state to avoid typing lag/drop issues caused by global state updates
   const [renamingId, setRenamingId] = useState<string | null>(null);
@@ -116,7 +117,9 @@ export function AppSidebar() {
           />
         ) : (
           <SidebarMenuButton
-            onClick={() => switchWorkflow(workflow.id)}
+            onClick={() => {
+              switchWorkflow(workflow.id);    
+            }}
             isActive={workflow.id === currentWorkflowId}
             className="w-full pr-8 relative"
           >
@@ -184,7 +187,7 @@ export function AppSidebar() {
       </SidebarContent>
       <SidebarFooter>
 
-        
+
         <SidebarMenu>
           <SidebarMenuItem>
             <Link href="/graph">
@@ -203,7 +206,7 @@ export function AppSidebar() {
               </SidebarMenuButton>
             </Link>
           </SidebarMenuItem>
-          
+
           <SidebarMenuItem>
             {/* <ApiKeys>
               <SidebarMenuButton>

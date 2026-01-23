@@ -1,7 +1,7 @@
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3003";
+const API_BASE = "http://localhost:3003";
 
 export async function apiRequest(path: string, options: RequestInit) {
-  const res = await fetch(`${BASE_URL}${path}`, {
+  const res = await fetch(`${API_BASE}${path}`, {
     headers: {
       "Content-Type": "application/json",
       ...options.headers,
