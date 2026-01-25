@@ -3,20 +3,9 @@
 import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
 import { cva, VariantProps } from "class-variance-authority"
-// import { PanelLeftIcon } from "lucide-react"
-
 import { useIsMobile } from "../../hooks/useisMobile"
 import { cn } from "../../lib/utils"
 import { Button } from "./button"
-// import { Input } from "@/components/ui/input"
-// import { Separator } from "@/components/ui/separator"
-// import {
-//   Sheet,
-//   SheetContent,
-//   SheetDescription,
-//   SheetHeader,
-//   SheetTitle,
-// } from "@/components/ui/sheet"
 import { Skeleton } from "./skeleton"
 import {
   Tooltip,
@@ -43,49 +32,8 @@ type SidebarContextProps = {
   toggleSidebar: () => void
 }
 
-type RightSidebarContextProps = {
-  open: boolean
-  toggleSidebar: () => void
-}
-
 const SidebarContext = React.createContext<SidebarContextProps | null>(null)
-const RightSidebarContext = React.createContext<RightSidebarContextProps | null>(null)
 
-function RightSidebarProvider({ children }: { children: React.ReactNode }) {
-  const [open, setOpen] = React.useState(true)
-  const toggleSidebar = () => setOpen(o => !o)
-
-  return (
-    <RightSidebarContext.Provider value={{ open, toggleSidebar }}>
-      {children}
-    </RightSidebarContext.Provider>
-  )
-}
-
-function RightSidebarTrigger({
-  className,
-  ...props
-}: React.ComponentProps<typeof Button>) {
-  const { toggleSidebar, open } = useRightSidebar()
-
-  return (
-    <Button
-      variant="ghost"
-      size="icon"
-      className={cn("size-9 cursor-pointer", className)}
-      onClick={toggleSidebar}
-      {...props}
-    >
-      {open ? <RiSideBarFill className="size-5" /> : <RiSideBarLine className="size-5" />}
-    </Button>
-  )
-}
-
-function useRightSidebar() {
-  const ctx = React.useContext(RightSidebarContext)
-  if (!ctx) throw new Error("useRightSidebar must be used inside RightSidebarProvider")
-  return ctx
-}
 
 function useSidebar() {
   const context = React.useContext(SidebarContext)
@@ -206,10 +154,7 @@ function Sidebar({
   variant?: "sidebar" | "floating" | "inset"
   collapsible?: "offcanvas" | "icon" | "none"
 }) {
-  // const { isMobile, state, openMobile, setOpenMobile } = useSidebar()
-  const left = useSidebar()
-  const right = useRightSidebar()
-
+  const { isMobile, state, openMobile, setOpenMobile } = useSidebar()
 
   if (collapsible === "none") {
     return (
@@ -254,9 +199,8 @@ function Sidebar({
   return (
     <div
       className="group peer text-sidebar-foreground hidden md:block"
-      // data-state={state}
-      data-state={side === "left" ? (left.state) : (right.open ? "expanded" : "collapsed")}
-      data-collapsible={side === "left" ? (left.state === "collapsed" ? collapsible : "") : (right.open ? "" : collapsible)}
+      data-state={state}
+      data-collapsible={state === "collapsed" ? collapsible : ""}
       data-variant={variant}
       data-side={side}
       data-slot="sidebar"
@@ -616,7 +560,7 @@ function SidebarMenuAction({
         "peer-data-[size=lg]/menu-button:top-2.5",
         "group-data-[collapsible=icon]:hidden",
         showOnHover &&
-        "peer-data-[active=true]/menu-button:text-sidebar-accent-foreground group-focus-within/menu-item:opacity-100 group-hover/menu-item:opacity-100 data-[state=open]:opacity-100 md:opacity-0",
+          "peer-data-[active=true]/menu-button:text-sidebar-accent-foreground group-focus-within/menu-item:opacity-100 group-hover/menu-item:opacity-100 data-[state=open]:opacity-100 md:opacity-0",
         className
       )}
       {...props}
@@ -768,8 +712,7 @@ export {
   SidebarMenuSubItem,
   SidebarProvider,
   SidebarRail,
+  // SidebarSeparator,
+  SidebarTrigger,
   useSidebar,
-  RightSidebarProvider,
-  useRightSidebar,
-  RightSidebarTrigger, SidebarTrigger,
 }

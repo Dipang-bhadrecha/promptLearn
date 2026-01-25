@@ -1,6 +1,6 @@
 "use client";
 
-import { SidebarTrigger, RightSidebarTrigger } from "../ui/sidebar";
+import { SidebarTrigger } from "../ui/sidebar";
 import { useChatStore } from "./chat.store";
 import { useEffect, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
@@ -104,9 +104,9 @@ export default function ChatStreamPanel() {
       </div>
 
       {/* Right Sidebar Trigger */}
-      <div className="absolute top-3 right-3 z-50">
+      {/* <div className="absolute top-3 right-3 z-50">
         <RightSidebarTrigger />
-      </div>
+      </div> */}
 
       {/* Messages */}
       <div className="flex-1 overflow-y-auto">
