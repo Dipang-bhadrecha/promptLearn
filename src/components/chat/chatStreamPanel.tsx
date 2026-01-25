@@ -109,31 +109,33 @@ export default function ChatStreamPanel() {
       </div>
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto px-20 py-10 space-y-4">
-        {history.map((msg, i) => (
-          <div
-            key={i}
-            className={`max-w-[60%] p-2 rounded-lg ${
-              msg.role === "user"
-                ? "ml-auto bg-blue-500"
-                : "mr-auto bg-white/10"
-            }`}
-          >
-            <ReactMarkdown
-              remarkPlugins={[remarkGfm]}
-              rehypePlugins={[rehypeHighlight]}
+      <div className="flex-1 overflow-y-auto">
+        <div className="max-w-3xl mx-auto px-4 py-10 space-y-6">
+          {history.map((msg, i) => (
+            <div
+              key={i}
+              className={`w-fit max-w-[80%] p-3 rounded-lg text-sm leading-relaxed ${msg.role === "user"
+                  ? "ml-auto bg-blue-500"
+                  : "mr-auto bg-white/10"
+                }`}
             >
-              {msg.text}
-            </ReactMarkdown>
-          </div>
-        ))}
+              <ReactMarkdown
+                remarkPlugins={[remarkGfm]}
+                rehypePlugins={[rehypeHighlight]}
+              >
+                {msg.text}
+              </ReactMarkdown>
+            </div>
+          ))}
 
-        {loading && (
-          <div className="mr-auto bg-white/10 p-3 rounded-lg">...</div>
-        )}
+          {loading && (
+            <div className="mr-auto bg-white/10 p-3 rounded-lg">...</div>
+          )}
 
-        <div ref={chatEndRef} />
+          <div ref={chatEndRef} />
+        </div>
       </div>
+
 
       {/* Input */}
       <div className="p-4">
@@ -148,7 +150,8 @@ export default function ChatStreamPanel() {
               }
             }}
             placeholder="Type your message..."
-            className="flex-1 resize-none bg-transparent border border-neutral-700 rounded-lg p-3 text-sm"
+            // className="flex-1 resize-none bg-transparent border border-neutral-700 rounded-lg p-3 text-sm"
+            className="flex-1 resize-none bg-neutral-900 border border-neutral-700 rounded-lg p-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             rows={1}
           />
 
