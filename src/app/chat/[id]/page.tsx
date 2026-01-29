@@ -1,42 +1,16 @@
 "use client";
-
-import { useEffect, useState } from "react";
-import { apiRequest } from "../../../lib/api";
 import { useParams } from "next/navigation";
+import { useEffect } from "react";
+import { useChatStore } from "@/src/components/chat/chat.store";
+import ChatStreamPanel from "@/src/components/chat/chatStreamPanel";
 
-export default function ChatPage() {
+export default function ChatConversationPage() {
   const params = useParams();
-  const conversationId = params.id as string;
-
-  const [messages, setMessages] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+  const setConversationId = useChatStore((s) => s.setConversationId);
 
   useEffect(() => {
-    async function loadMessages() {
-      try {
-        const data = await apiRequest(`/api/chat/${conversationId}/messages`, {
-          method: "GET",
-        });
-        setMessages(data);
-      } catch (err) {
-        console.error("Failed to load messages", err);
-      } finally {
-        setLoading(false);
-      }
-    }
+    setConversationId(params.id as string);
+  }, [params.id]);
 
-    loadMessages();
-  }, [conversationId]);
-
-  if (loading) return <div>Loading...</div>;
-
-  return (
-    <div className="chat-window">
-      {messages.map((msg) => (
-        <div key={msg.id}>
-          <b>{msg.role}:</b> {msg.content}
-        </div>
-      ))}
-    </div>
-  );
+  return <ChatStreamPanel />;
 }

@@ -13,123 +13,93 @@ import {
   SidebarMenuItem,
   SidebarMenuSkeleton,
 } from "./ui/sidebar";
-import { useWorkflowStore } from "../lib/workflow-store";
+
 import {
   RiAddLine,
-  RiArrowDownBoxLine,
   RiComputerLine,
   RiGithubLine,
-  RiKeyLine,
   RiMoonLine,
   RiSunLine,
 } from "@remixicon/react";
-import { MoreVerticalIcon } from "lucide-react";
+
 import { useTheme } from "next-themes";
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
-import { useShallow } from "zustand/react/shallow";
+import { useEffect, useState } from "react";
+
 import { useChatStore } from "./chat/chat.store";
 import Logo from "./logo";
 import { apiRequest } from "../lib/api";
 
 export function AppSidebar() {
   const { setTheme, resolvedTheme } = useTheme();
+
   const [mounted, setMounted] = useState(false);
+  const [conversations, setConversations] = useState<any[]>([]);
+  const [loadingConversations, setLoadingConversations] = useState(true);
   const setConversationId = useChatStore((s) => s.setConversationId);
 
-  // Local rename state to avoid typing lag/drop issues caused by global state updates
-  const [renamingId, setRenamingId] = useState<string | null>(null);
-  const [localRenameValue, setLocalRenameValue] = useState<string>("");
-
-  const { createWorkflow, switchWorkflow, currentWorkflowId, deleteWorkflow, renameWorkflow } =
-    useWorkflowStore(
-      useShallow((state) => ({
-        createWorkflow: state.createWorkflow,
-        switchWorkflow: state.switchWorkflow,
-        currentWorkflowId: state.currentWorkflowId,
-        deleteWorkflow: state.deleteWorkflow,
-        renameWorkflow: state.renameWorkflow,
-      }))
-    );
-
-  function handleStartRename(workflow: { id: string; name: string }) {
-    setRenamingId(workflow.id);
-    setLocalRenameValue(workflow.name);
-  }
-
-  function handleDelete(id: string) {
-    if (confirm("Delete this workflow?")) {
-      console.log("Delete workflow", id);
-      deleteWorkflow(id); // already in store
-    }
-  }
-
-  // Save rename only once and only if still renaming the same id
-  function handleSaveRename(id: string, newName: string) {
-    const trimmed = newName.trim();
-    if (trimmed) {
-      renameWorkflow(id, trimmed);
-    }
-    setRenamingId(null);
-  }
-
-  function handleCancelRename() {
-    setRenamingId(null);
-    setLocalRenameValue("");
-  }
-
-  const workflows = useWorkflowStore(
-    useShallow((state) =>
-      state.workflows
-        .slice()
-        .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-    )
-  );
-
+  // Mark mounted (avoids hydration issues with theme switch)
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  const menuItems = workflows.map((workflow) => {
-    const isRenaming = renamingId === workflow.id;
+  // Load conversations from backend
+  useEffect(() => {
+    async function loadConversations() {
+      try {
+        const data = await apiRequest("/api/chat", {
+          method: "GET",
+        });
+        setConversations(data);
+      } catch (err) {
+        console.error("Failed to load conversations", err);
+      } finally {
+        setLoadingConversations(false);
+      }
+    }
 
-    return (
-      <SidebarMenuItem key={workflow.id} className="relative group">
-        {isRenaming ? (
-          <input
-            type="text"
-            defaultValue={workflow.name}
-            onBlur={(e) => handleSaveRename(workflow.id, e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                handleSaveRename(workflow.id, (e.target as HTMLInputElement).value);
-              }
-              if (e.key === "Escape") {
-                handleCancelRename();
-              }
-            }}
-            autoFocus
-            ref={(el) => {
-              if (el) el.select();
-            }}
+    loadConversations();
+  }, []);
 
-            className="w-full rounded px-2 py-1 text-sm bg-transparent outline-none border border-sidebar-border " // cursor-pointer pointer need to be fixed
-          />
-        ) : (
-          <SidebarMenuButton
-            onClick={() => {
-              switchWorkflow(workflow.id);    
-            }}
-            isActive={workflow.id === currentWorkflowId}
-            className="w-full pr-8 relative"
-          >
-            <span className="truncate">{workflow.name}</span>
-          </SidebarMenuButton>
-        )}
+  // Build sidebar items
+  const menuItems = conversations.map((conv) => (
+    <SidebarMenuItem key={conv.id}>
+      <SidebarMenuButton
+        onClick={() => setConversationId(conv.id)}
+        className="w-full pr-2"
+      >
+        <span className="truncate">
+          {conv.title || "New Chat"}
+        </span>
+      </SidebarMenuButton>
+    </SidebarMenuItem>
+  ));
 
-      </SidebarMenuItem>
-    );
-  });
+  async function handleNewConversation() {
+    try {
+      // Create empty conversation on backend
+      const data = await apiRequest("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prompt: " " })
+      });
+
+      const newConv = {
+        id: data.conversationId,
+        title: "New Chat"
+      };
+
+      // Put new chat at top of sidebar
+      setConversations(prev => [newConv, ...prev]);
+
+      // Switch chat panel to this conversation
+      setConversationId(String(data.conversationId));
+
+    } catch (err) {
+      console.error("Failed to create conversation", err);
+    }
+  }
+
 
   return (
     <Sidebar>
@@ -137,57 +107,46 @@ export function AppSidebar() {
         <div className="px-2 flex items-center gap-2">
           <Logo className="size-18" />
           <span className="text-2xl tracking-tighter font-sans leading-none font-medium">
-            {/* Prompt Flow */} Prompt
-            <br />
-            Learn
+            Prompt<br />Learn
           </span>
         </div>
       </SidebarHeader>
+
       <SidebarContent>
-        <SidebarGroup>
-          <SidebarGroupLabel>New</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              <SidebarMenuItem>
-                <SidebarMenuButton onClick={() => createWorkflow()}>
-                  <RiAddLine className="size-4 shrink-0" />
-                  New Flow
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                {/* <ImportDialog>
-                  <SidebarMenuButton>
-                    <RiArrowDownBoxLine className="size-4 shrink-0" />
-                    Import Learning Docs
-                  </SidebarMenuButton>
-                </ImportDialog> */}
-              </SidebarMenuItem>
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-        <SidebarGroup>
-          <SidebarGroupLabel>Workflows</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {mounted ? (
-                menuItems
-              ) : (
-                <>
-                  <SidebarMenuSkeleton />
-                  <SidebarMenuSkeleton />
-                  <SidebarMenuSkeleton />
-                  <SidebarMenuSkeleton />
-                  <SidebarMenuSkeleton />
-                  <SidebarMenuSkeleton />
-                </>
-              )}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+  <SidebarGroup>
+    <SidebarGroupLabel>New</SidebarGroupLabel>
+    <SidebarGroupContent>
+      <SidebarMenu>
+        <SidebarMenuItem>
+          <SidebarMenuButton onClick={handleNewConversation}>
+            <RiAddLine className="size-4 shrink-0" />
+            New Chat
+          </SidebarMenuButton>
+        </SidebarMenuItem>
+      </SidebarMenu>
+    </SidebarGroupContent>
+  </SidebarGroup>
+
+  {/* Section 2 — Conversations list */}
+  <SidebarGroup>
+    <SidebarGroupLabel>Conversations</SidebarGroupLabel>
+    <SidebarGroupContent>
+      <SidebarMenu>
+        {loadingConversations ? (
+          <>
+            <SidebarMenuSkeleton />
+            <SidebarMenuSkeleton />
+            <SidebarMenuSkeleton />
+          </>
+        ) : (
+          menuItems
+        )}
+      </SidebarMenu>
+    </SidebarGroupContent>
+  </SidebarGroup>
       </SidebarContent>
+
       <SidebarFooter>
-
-
         <SidebarMenu>
           <SidebarMenuItem>
             <Link href="/graph">
@@ -208,14 +167,6 @@ export function AppSidebar() {
           </SidebarMenuItem>
 
           <SidebarMenuItem>
-            {/* <ApiKeys>
-              <SidebarMenuButton>
-                <RiKeyLine className="size-4 shrink-0" />
-                API Keys
-              </SidebarMenuButton>
-            </ApiKeys> */}
-          </SidebarMenuItem>
-          <SidebarMenuItem>
             <Link href="https://github.com/Dipang-bhadrecha/promptLearn" target="_blank">
               <SidebarMenuButton>
                 <RiGithubLine className="size-4 shrink-0" />
@@ -228,13 +179,12 @@ export function AppSidebar() {
             {mounted ? (
               <SidebarMenuButton
                 onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
-                suppressHydrationWarning
               >
                 {resolvedTheme === "dark" ? (
-                  <RiSunLine className="size-4 shrink-0" suppressHydrationWarning />
+                  <RiSunLine className="size-4 shrink-0" />
                 ) : (
-                  <RiMoonLine className="size-4 shrink-0" suppressHydrationWarning />
-                )}{" "}
+                  <RiMoonLine className="size-4 shrink-0" />
+                )}
                 {resolvedTheme === "dark" ? "Light mode" : "Dark mode"}
               </SidebarMenuButton>
             ) : (
