@@ -244,10 +244,13 @@ export function AppSidebar() {
     setDeleteDialogOpen(true);
   }
 
-  function closeDeleteDialog(open?: boolean) {
+  function closeDeleteDialog(open?: boolean | React.MouseEvent<HTMLButtonElement>) {
     if (deleteLoading) return;
-    if (open === true) {
-      setDeleteDialogOpen(true);
+    if (typeof open === "boolean") {
+      setDeleteDialogOpen(open);
+      if (!open) {
+        setDeleteTarget(null);
+      }
       return;
     }
     setDeleteDialogOpen(false);
