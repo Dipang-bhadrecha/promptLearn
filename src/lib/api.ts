@@ -12,10 +12,20 @@ export async function apiRequest(path: string, options: RequestInit = {}) {
     },
   });
 
-  const data = await res.json();
+  let data: any = null;
+  const text = await res.text();
+  if (text) {
+    try {
+      data = JSON.parse(text);
+    } catch {
+      data = text;
+    }
+  }
 
   if (!res.ok) {
-    throw new Error(data.error || "Request failed");
+    const errorMessage =
+      data && typeof data === "object" && "error" in data ? data.error : "Request failed";
+    throw new Error(errorMessage);
   }
 
   return data;
