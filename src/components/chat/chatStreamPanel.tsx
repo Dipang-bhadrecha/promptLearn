@@ -255,7 +255,7 @@ export default function ChatStreamPanel() {
       <div className="flex-1 min-h-0 px-4">
         {history.length === 0 && !loading ? (
           <div className="h-full flex flex-col items-center justify-center gap-6">
-            <h2 className="text-2xl font-semibold text-white/90">Where should we begin?</h2>
+            <h2 className="text-2xl font-semibold text-white/90">Start Learning—One Thought. One Screen. Zero Scroll</h2>
             <div className="w-full max-w-2xl">
               <ChatInput
                 loading={loading}

@@ -8,6 +8,7 @@ export default async function handler(req, res) {
 
   try {
     const response = await fetch('http://ec2-13-233-158-206.ap-south-1.compute.amazonaws.com:3003/api/chat', {
+    // const response = await fetch(`${API_BASE}/api/chat`, {
       
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
